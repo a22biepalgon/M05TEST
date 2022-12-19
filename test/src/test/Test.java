@@ -15,6 +15,14 @@ public class Test {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        //Prueba
+        int i = 0;
+        
+        while (i < 100){
+            System.out.println("El valor de i és: " + i);
+            i++;
+        }
     }
     
 }
