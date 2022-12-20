@@ -14,6 +14,16 @@ import java.util.Scanner;
  * @version version
  *
  */
+
+/**
+ * Crea un punt amb les seves coordenades x i y
+ */
+class Punt {
+
+    float x;
+    float y;
+}
+
 public class Utils {
 // <editor-fold defaultstate="collapsed" desc="Implementació de LlegirInt()">
 
@@ -183,6 +193,87 @@ public class Utils {
         return result;
     }
     // </editor-fold>
+    
+    /**
+     * LLegeix un double i el comprova abans de retornar-lo a
+     * @return Retorna un valor double 
+     */
+    public static double LlegirDouble() {
+        double result;
+
+        if (scan == null) {
+            scan = new Scanner(System.in);
+        }
+        result = LlegirDouble(scan);
+
+        return result;
+    }
+
+    /**
+     * Serveix per a demanar un double amb un missatge que passarem com a parametre
+     * @param missatge POdem demanar un numero amb aquest missatge com a parametre
+     * @return Retorna el double llegit per el teclat
+     */
+    public static double LlegirDouble(String missatge) {
+        double result;
+
+        if (scan == null) {
+            scan = new Scanner(System.in);
+        }
+        result = LlegirDouble(scan, missatge);
+
+        return result;
+    }
+
+    /**
+     * Serveix per a llegir un double amb el nostre scan
+     * @param scan Serveix per a posar un scanner que no sigui el nostre
+     * @return Retorna el double llegit per el teclat
+     */
+    public static double LlegirDouble(Scanner scan) {
+        return LlegirDouble(scan, null);
+    }
+
+    /**
+     * Serveix per a llegir un double amb un missatge, i que estigui entre un minim i un maxim
+     * @param scan Podem posar el nostre scanner
+     * @param missatge Podem dir el missatge que volem que imprimeixi el programa
+     * @param valorMin Diem el valor minim del numero a introduir
+     * @param valorMax Diem el valor maxim del numero a introduir
+     * @return retorna un double introduit per el teclat
+     */
+    public static double LlegirDouble(Scanner scan, String missatge, float valorMin, float valorMax) {
+        double result = 0;
+        do {
+            result = LlegirDouble(scan, missatge);
+        } while (result < valorMin || result > valorMax);
+
+        return result;
+    }
+
+    /**
+     * Serveix per a demanr un numero amb el nostre escaner i un missatge
+     * @param scan Podem dir el nostre escaner
+     * @param missatge Podem dirt un missatge per a que imprimeixi abans de demanr el numero
+     * @return Retorna unn double introduit al teclat
+     */
+    public static double LlegirDouble(Scanner scan, String missatge) {
+        boolean dadesCorrectes;
+        double result = 0;
+        do {
+            if (missatge != null) {
+                System.out.print(missatge);
+            }
+            dadesCorrectes = scan.hasNextDouble();
+            if (dadesCorrectes) {
+                result = scan.nextDouble();
+            } else if (scan.hasNext()) {
+                scan.nextLine();
+            }
+        } while (!dadesCorrectes);
+
+        return result;
+    }
 
     /**
      * Serveix per a Imprimir un menú i recollir la selecció donant-li un array amb les opcions del menú
@@ -239,4 +330,163 @@ public class Utils {
         }
     }
     
+    public static float mitja_vector (float[] v){
+        //Recorrem el vector per anar sumant els elements
+        float suma_elements = 0;
+        for (int i=0;i<=v.length-1;i++){
+            suma_elements = suma_elements + v[i];
+        }
+        //Calculem la mitja dividint la suma_elements entre la longitud del vector
+        float mitja = suma_elements/v.length;
+        //Retornem
+        return mitja;
+    }
+    
+    /**
+     * Fa la suma d'un vector d'enters
+     * @param vector Vector d'enters
+     * @return Retorna la suma dels elements del vector
+     */
+    public static int suma_elements_vector (int[] vector){
+         //Recorrem el vector per anar sumant els elements
+        int suma_elements = 0;
+        for (int i=0;i<=vector.length-1;i++){
+            suma_elements = suma_elements + vector[i];
+        }
+        //Retornem
+        return suma_elements;
+    }
+    
+    /**
+     * Dona un punt resultant de sumar un punt més un vector
+     * @param punt Punt
+     * @param vector Vector 
+     * @return Retorna el punt resultant
+     */
+    public static Punt suma_punt_mes_vector (Punt punt, Punt vector){
+        Punt punt_resultat;
+        punt_resultat = new Punt();
+        punt_resultat.x = punt.x + vector.x;
+        punt_resultat.y = punt.y + vector.y;
+        
+        return punt_resultat;
+    }
+    
+    /**
+     * Dona un nou vector resultant de multiplicar un vector per un escalar
+     * @param vector Vector
+     * @param factor_escala Escalar
+     * @return Retorna el vector resultant
+     */
+    public static Punt escalar_per_vector (Punt vector, float factor_escala){
+        Punt punt_resultat;
+        punt_resultat = new Punt();
+        punt_resultat.x = factor_escala*vector.x;
+        punt_resultat.y = factor_escala*vector.y;
+        
+        return punt_resultat;
+    }
+    
+    /**
+     * Comprova si dos punts són iguals
+     * @param punt1 Primer punt
+     * @param punt2 Segon punt
+     * @return Retorna un boolean que és true si els punts són iguals i false si els punts són diferents
+     */
+    public static boolean comparacio_punts (Punt punt1, Punt punt2){
+        if (punt1.x==punt2.x && punt1.y==punt2.y){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    /**
+     * Valida una contrasenya segons les següents condicions:
+     * -Mínim 8 caràcters
+     * -Màxim 15 caràcters 
+     * -Ha d'incloure almenys una majúscula, una minúscula, un número i un símbol 
+     * -No pot ser cap dels inclosos a la següent llista:
+     *      Admin_00, rooT12AaBbCc!, super_2000, #321Cba# 
+     * -No pot tenir cap seqüència de 3 o més caràcters consecutius del tipus 123, abc, ...
+     * @param pwd La contrasenya o password
+     * @return Retorna un boolean que es true si la contrasenya és vàlida i false si no és vàlida
+     */
+    public boolean IsValid(String pwd)
+   {
+       boolean result = true;
+       
+       /**
+        * Aquí cal desenvolupar la funció
+        */
+       
+       //CONSTANTS 
+       final int LONGITUD_MINIMA_PWD = 8;
+       final int LONGITUD_MAXIMA_PWD = 15;
+       final String ARRAY_PWD_PROHIBITS [] = {"Admin_00","rooT12AaBbCc!","super_2000","#321Cba#"};
+       final int INDEX_2 = 2; //El número 2 dins dels índexos que utilitzem per comprovar les seqüències de tres o més caràcters consecutius
+      
+       //Comprovem que el password té entre 8 i 15 caràcters
+       if (pwd.length()<LONGITUD_MINIMA_PWD || LONGITUD_MAXIMA_PWD<pwd.length()){
+           result = false;
+       }
+       
+       /*Comprovem que el password contingui almenys una majúscula, una minúscula, un número i un símbol. Ho fem recorrent el
+       password i utilitzant comptadors*/
+       
+       //Recorrem el String comprovant si és majúscula o minúscula i ho sumem a un comptador
+       int comptador_minuscules = 0;
+       int comptador_majuscules = 0;
+       int comptador_numeros = 0;
+       int comptador_simbols = 0;
+       for (int i=0;i<=pwd.length()-1;i++){
+           //MAJÚSCULA I MINÚSCULA
+           if ('a'<=pwd.charAt(i) && pwd.charAt(i)<='z'){
+               comptador_minuscules++;
+           }
+           else if ('A'<=pwd.charAt(i) && pwd.charAt(i)<='Z'){
+               comptador_majuscules++;
+           }
+           //NÚMERO
+           else if (Character.isDigit(pwd.charAt(i))){
+               comptador_numeros++;
+           }
+           //SÍMBOL
+           else{
+               comptador_simbols++;
+           }
+           //SEQÜÈNCIA TRES CARÀCTERS CONSECUTIUS
+           if (i>=INDEX_2){
+               //Passem tots els caràcters a integers
+               int caracter_dos_indexos_enrere = pwd.charAt(i - 2);
+               int caracter_un_index_enrere = pwd.charAt(i - 1);
+               int caracter_actual = pwd.charAt(i);
+               //Comprovem si són una seqüència de caràcters consecutius
+               if (caracter_dos_indexos_enrere == caracter_actual - 2 && caracter_un_index_enrere == caracter_actual - 1) {
+                   result = false;
+               }
+           }
+       }
+       //Si algun dels comptadors és igual a 0, el password no és vàlid
+       if (comptador_minuscules==0 || comptador_majuscules==0){
+           result = false;
+       }
+       //Si comptador_numeros és igual a 0, el password no és vàlid
+       if (comptador_numeros==0){
+           result = false;
+       }
+       //Si comptador_simbols és igual a 0, el password no és vàlid
+       if (comptador_simbols==0){
+           result = false;
+       }
+       
+       //Comprovem que el password no pertany a la llista de passwords prohibits recorrent el ARRAY_PWD_PROHIBITS
+       for (int i=0;i<=ARRAY_PWD_PROHIBITS.length-1;i++){
+           if (ARRAY_PWD_PROHIBITS[i].equals(pwd)){
+               result = false;
+           }
+       }
+        
+       return result;
+   }
 }
