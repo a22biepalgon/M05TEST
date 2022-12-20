@@ -216,19 +216,21 @@ public class Utils {
     }
     // </editor-fold>
 
-    public static void LLegirString(){
-        Utils.LLegirString(null);
+    public static String LLegirString() {
+        String resultat = Utils.LLegirString(null);
+        return resultat;
     }
-    public static String LLegirString(String missatge ) {
+
+    public static String LLegirString(String missatge) {
         String resultat = "";
         if (scan == null) {
             scan = new Scanner(System.in);
         }
-            if (missatge != null) {
-                System.out.print(missatge);
-            }
-            resultat = scan.nextLine();
-         return resultat; 
+        if (missatge != null) {
+            System.out.print(missatge);
+        }
+        resultat = scan.nextLine();
+        return resultat;
     }
 
     /**

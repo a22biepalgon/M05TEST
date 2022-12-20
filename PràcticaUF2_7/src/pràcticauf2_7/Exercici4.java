@@ -11,28 +11,29 @@ import utils.Utils;
  * @author Biel
  */
 public class Exercici4 {
-        public static void main(String[] args) {
-            if (ValidarSuperusuari()){
-                System.out.println("Benvingut superusuari");
-            }else{
-                System.out.println("Has gastat tots els intents");
+
+    public static void main(String[] args) {
+        if (ValidarSuperusuari()) {
+            System.out.println("Benvingut superusuari");
+        } else {
+            System.out.println("Has gastat tots els intents");
+        }
+    }
+
+    static boolean ValidarSuperusuari() {
+        boolean resultat = false;
+        final String CONTRASENYA = "12345";
+        int intents = 0;
+
+        while (intents < 3 && resultat == false) {
+            String contra = Utils.LLegirString("Digues la contrasenya per al superusuari, et queda/en " + (3 - intents) + " intent/s: ");
+            if (contra.equals(CONTRASENYA)) {
+                resultat = true;
+            } else {
+                intents++;
             }
         }
-        static boolean ValidarSuperusuari(){
-            boolean resultat = false;
-            final String CONTRASENYA = "12345";
-            int intents = 0;
-            
-            while (intents < 3 && resultat == false){
-                String contra = Utils.LLegirString("Digues la contrasenya per al superusuari, et queda/en " + (3 - intents) + " intent/s: ");
-                if (contra.equals(CONTRASENYA)){
-                    resultat = true;
-                }else{
-                    intents++;
-                }
-            }
-            return resultat;
-        }
-        
-        
+        return resultat;
+    }
+
 }
