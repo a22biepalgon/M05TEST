@@ -295,6 +295,22 @@ public class Utils {
 
         return result;
     }
+    
+    /**
+     * Serveix per a llegir un double amb un missatge, i que estigui per sobre d'un minim
+     * @param scan Podem posar el nostre scanner
+     * @param missatge Podem dir el missatge que volem que imprimeixi el programa
+     * @param valorMin Diem el valor minim del numero a introduir
+     * @return retorna un double introduit per el teclat
+     */
+    public static double LlegirDouble(Scanner scan, String missatge, float valorMin) {
+        double result = 0;
+        do {
+            result = LlegirDouble(scan, missatge);
+        } while (result < valorMin);
+
+        return result;
+    }
 
     /**
      * Serveix per a demanr un numero amb el nostre escaner i un missatge
