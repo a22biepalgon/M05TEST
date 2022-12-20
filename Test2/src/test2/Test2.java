@@ -17,6 +17,7 @@ public class Test2 {
         // TODO code application logic here
         //a
         //Prova FRanc
+        //El biel és un tonto
         int i = 0;
         while (i < 100){
             System.out.println("Hola caracola");
