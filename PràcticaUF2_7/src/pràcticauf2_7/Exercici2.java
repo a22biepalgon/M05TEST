@@ -4,7 +4,7 @@
  */
 package pràcticauf2_7;
 
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -14,19 +14,28 @@ import java.util.Date;
 public class Exercici2 {
 
     public static void main(String[] args) {
-        Date prova = new Date(2010-07-30);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2010, 01, 05);
+        Date prova = calendar.getTime();
 
-        System.out.println(CalcularIVA(100, "Superreduit", prova));
+        System.out.println(CalcularIVA(100, "Reduït", prova));
     }
 
     static float CalcularIVA(float preu_inicial, String tipus_iva, Date data_compra) {
         float resultat;
-        Date vuitantasis = new Date(1986 - 01 - 01);
-        Date nurantados = new Date(1992 - 01 - 01);
-        Date nurantatres = new Date(1993 - 01 - 01);
-        Date nurantacinc = new Date(1995 - 01 - 01);
-        Date deu = new Date(2010 - 01 - 01);
-        Date dotze = new Date(2012 - 07 - 15);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1986, 00, 01);
+        Date vuitantasis = calendar.getTime();
+        calendar.set(1992, 00, 01);
+        Date nurantados = calendar.getTime();
+        calendar.set(1993, 00, 01);
+        Date nurantatres = calendar.getTime();
+        calendar.set(1995, 00, 01);
+        Date nurantacinc = calendar.getTime();
+        calendar.set(2010, 00, 01);
+        Date deu = calendar.getTime();
+        calendar.set(2012, 06, 15);
+        Date dotze = calendar.getTime();
 
         switch (tipus_iva) {
             case ("Exempt"):
