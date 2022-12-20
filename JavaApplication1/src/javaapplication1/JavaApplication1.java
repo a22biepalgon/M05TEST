@@ -15,6 +15,15 @@ public class JavaApplication1 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        // TODO code application logic here
+        //a
+        //Prueba
+        int i = 0;
+
+        while (i < 100) {
+            System.out.println("El valor de i és: " + i);
+            i++;
+        }
     }
-    
+
 }
