@@ -15,10 +15,10 @@ public class Exercici2 {
 
     public static void main(String[] args) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2010, 01, 05);
+        calendar.set(2014, 01, 05);
         Date prova = calendar.getTime();
 
-        System.out.println(CalcularIVA(100, "Reduït", prova));
+        System.out.println(CalcularIVA(100, "General", prova));
     }
 
     static float CalcularIVA(float preu_inicial, String tipus_iva, Date data_compra) {
@@ -75,7 +75,7 @@ public class Exercici2 {
                 } else if (data_compra.before(dotze)) {
                     resultat = preu_inicial + (preu_inicial * 18) / 100;
                 } else {
-                    resultat = preu_inicial + (preu_inicial * 21) / 18;
+                    resultat = preu_inicial + (preu_inicial * 21) / 100;
                 }
                 break;
             default:
