@@ -17,6 +17,11 @@ public class Test2 {
         // TODO code application logic here
         //a
         //Prova FRanc
+        int i = 0;
+        while (i < 100){
+            System.out.println("Hola caracola");
+            i++;
+        }
     }
     
 }
