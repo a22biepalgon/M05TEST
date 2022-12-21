@@ -17,41 +17,45 @@ public class Exercici6 {
         String[] opcions_menu = {"Afegir número (push)", "Treure número (pop)", "Mostrar contingut de la pila"};
         int[] array_pila = new int[10];
         int seguent_n = -1;
-        while (!sortir){
+        while (!sortir) {
             int seleccio = Utils.Menu(opcions_menu);
-            switch (seleccio){
+            switch (seleccio) {
                 case (1):
-                    if (seguent_n > 9){
+                    if (seguent_n > 8) {
                         System.out.println("La pila està plena");
-                    }else{
+                    } else {
                         seguent_n++;
                         array_pila[seguent_n] = Utils.LlegirInt("Digues el numero a afegir a la pila: ");
                     }
                     break;
                 case (2):
-                    if (seguent_n < 0){
+                    if (seguent_n < 0) {
                         System.out.println("La pila està buida");
-                    }else{
+                    } else {
                         System.out.println("S'ha esborrat el numero " + array_pila[seguent_n]);
                         array_pila[seguent_n] = 0;
                         seguent_n--;
                     }
                     break;
                 case (3):
-                    if (seguent_n == 0){
+                    if (seguent_n < 0) {
                         System.out.println("La pila está buida");
-                    }else{
+                    } else {
                         System.out.println("La pila té els següents valors: ");
-                        for (int i = 0; i < array_pila.length; i++){
-                        if (array_pila[i] != 0){
-                        System.out.println(i + ") " + array_pila[i]);
+                        for (int i = 0; i <= seguent_n; i++) {
+
+                            System.out.println(i + 1 + ") " + array_pila[i]);
+
                         }
+                        System.out.println("");
                     }
-                    }
-                    
+                    break;
+                case (4):
+                    sortir = true;
+                    break;
+
             }
         }
     }
-    
 
 }

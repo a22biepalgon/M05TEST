@@ -297,11 +297,14 @@ public class Utils {
 
         return result;
     }
-    
+
     /**
-     * Serveix per a llegir un double amb un missatge, i que estigui per sobre d'un minim
+     * Serveix per a llegir un double amb un missatge, i que estigui per sobre
+     * d'un minim
+     *
      * @param scan Podem posar el nostre scanner
-     * @param missatge Podem dir el missatge que volem que imprimeixi el programa
+     * @param missatge Podem dir el missatge que volem que imprimeixi el
+     * programa
      * @param valorMin Diem el valor minim del numero a introduir
      * @return retorna un double introduit per el teclat
      */
@@ -350,12 +353,15 @@ public class Utils {
      */
     public static int Menu(String[] array_opcions) {
         int resultat;
+        if (scan == null) {
+            scan = new Scanner(System.in);
+        }
 
         for (int i = 0; i < array_opcions.length; i++) {
             System.out.println(i + 1 + ") " + array_opcions[i]);
         }
         System.out.println(array_opcions.length + 1 + ") Sortir");
-        resultat = LlegirInt(scan, "Opció seleccionada: ", 1, array_opcions.length);
+        resultat = LlegirInt(scan, "Opció seleccionada: ", 1, array_opcions.length + 1);
 
         return resultat;
     }
