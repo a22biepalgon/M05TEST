@@ -7,8 +7,12 @@ package pràcticauf2_7;
 import utils.Utils;
 
 /**
- *
- * @author Biel
+ * Escriu una funció anomenada “ValidarSuperusuari” que demani un password i que
+ * el comprovi amb un text emmagatzemat en una constant interna. Si no
+ * coincideix l’ha de tornar a demanar un màxim de 3 vegades. La funció ha de
+ * tornar si l’usuari ha encertat o no el password.
+ * 
+ * @author Biel Palomar i Franc Villalba
  */
 public class Exercici4 {
 

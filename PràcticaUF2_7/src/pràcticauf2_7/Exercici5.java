@@ -4,7 +4,6 @@
  */
 package pràcticauf2_7;
 
-import java.util.Scanner;
 
 /**
  * Escriu un procediment anomenat “Titol” que donat un text, el mostri per

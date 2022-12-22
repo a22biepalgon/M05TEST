@@ -8,8 +8,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- *
- * @author ausias
+ * Escriu una funció anomenada “CalcularIVA” a la que se li passa un preu, un
+ * tipus d’IVA i la data de la compra i retorna el preu amb l’IVA aplicat. El
+ * tipus d’IVA pot ser General, Reduït, Superreduït o Exempt.
+ * 
+ * @author Biel Palomar i Franc Villalba
  */
 public class Exercici2 {
 

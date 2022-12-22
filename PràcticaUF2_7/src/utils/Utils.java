@@ -14,6 +14,7 @@ import java.util.Scanner;
  * @version version
  *
  */
+
 /**
  * Crea un punt amb les seves coordenades x i y
  */
@@ -216,11 +217,20 @@ public class Utils {
     }
     // </editor-fold>
 
+    /**
+     * Llegeix un String sense demanar-lo amb missatge
+     * @return Retorna el String llegit
+     */
     public static String LLegirString() {
         String resultat = Utils.LLegirString(null);
         return resultat;
     }
-
+    
+    /**
+     * Llegeix un String demanant-lo amb un missatge
+     * @param missatge Missatge que demana el String
+     * @return Retorna el String llegit
+     */
     public static String LLegirString(String missatge) {
         String resultat = "";
         if (scan == null) {
@@ -335,6 +345,7 @@ public class Utils {
             dadesCorrectes = scan.hasNextDouble();
             if (dadesCorrectes) {
                 result = scan.nextDouble();
+                scan.nextLine();
             } else if (scan.hasNext()) {
                 scan.nextLine();
             }
@@ -406,7 +417,12 @@ public class Utils {
             QuicksortInt(array_int, j + 1, der);
         }
     }
-
+    
+    /**
+     * Calcula la mitja d'un vector
+     * @param v Vector de floats
+     * @return Retorna la mitja del vector de floats
+     */
     public static float mitja_vector(float[] v) {
         //Recorrem el vector per anar sumant els elements
         float suma_elements = 0;
@@ -512,7 +528,7 @@ public class Utils {
         }
 
         /*Comprovem que el password contingui almenys una majúscula, una minúscula, un número i un símbol. Ho fem recorrent el
-       password i utilitzant comptadors*/
+        password i utilitzant comptadors*/
         //Recorrem el String comprovant si és majúscula o minúscula i ho sumem a un comptador
         int comptador_minuscules = 0;
         int comptador_majuscules = 0;
