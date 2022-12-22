@@ -376,6 +376,19 @@ public class Utils {
 
         return resultat;
     }
+    public static int MenuSeleccio(String[] array_opcions) {
+        int resultat;
+        if (scan == null) {
+            scan = new Scanner(System.in);
+        }
+
+        for (int i = 0; i < array_opcions.length; i++) {
+            System.out.println(i + 1 + ") " + array_opcions[i]);
+        }
+        resultat = LlegirInt(scan, "Opció seleccionada: ", 1, array_opcions.length);
+
+        return resultat;
+    }
 
     /**
      * Serveix per a endreçar un array de int de mes petit a més gran

@@ -6,6 +6,7 @@ package pràcticauf2_7;
 
 import java.util.Calendar;
 import java.util.Date;
+import utils.Utils;
 
 /**
  * Escriu una funció anomenada “CalcularIVA” a la que se li passa un preu, un
@@ -17,13 +18,40 @@ import java.util.Date;
 public class Exercici2 {
 
     public static void main(String[] args) {
-        //Creem la data de prova al 2014-02-05
+        //Demanem el preu inicial
+        float preu = Utils.LlegirFloat("Digues el preu incial del producte: ");
+        
+        //Demanem el tipus d'iva
+        System.out.println("Digues el tipus d'IVA");
+        String[] opcions = {"Exempt", "Superreduit", "Reduït", "General"};
+        String tipusiva = "";
+        switch (Utils.MenuSeleccio(opcions)){
+            case (1):
+                tipusiva = "Exempt";
+                break;
+            case (2):
+                tipusiva = "Superreduit";
+                break;
+            case(3):
+                tipusiva = "Reduït";
+                break;
+            case (4):
+                tipusiva = "General";
+                break;
+            default:
+                tipusiva = "General";
+
+        }
+        
+        
+        //Demanem la data
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2014, 01, 05);
+        calendar.set(Utils.LlegirInt("Digues l'any de compra del producte: "), Utils.LlegirInt("Digues el mes de compra del producte: ") - 1, Utils.LlegirInt("Digues el dia de compra del producte: "));
         Date prova = calendar.getTime();
+        
 
         //Provem el caluclar iva
-        System.out.println(CalcularIVA(100, "General", prova));
+        System.out.println("El total és de " + CalcularIVA(preu, tipusiva, prova) + "€");
     }
 
     /**
