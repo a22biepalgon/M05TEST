@@ -33,5 +33,23 @@ public class PràcticaUF2_8 {
         }
         return resultat;
     }
+    static boolean EnRatlla(int[][] tauler, int fila, int columna){
+        //Mira no sortirse per la dreta
+        if (columna > tauler[fila].length - 3){
+            
+        }
+        //Mira no sortirse per la esquerra
+        if (columna < 4){
+            
+        }
+        //Mira nos sortirse per dalt
+        if (fila < 4){
+            
+        }
+        //Mira de no so
+        if (fila > tauler.length - 3){
+            
+        }
+    }
     
 }
