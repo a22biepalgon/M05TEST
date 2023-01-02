@@ -14,7 +14,24 @@ public class PràcticaUF2_8 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+    }
+    
+    static int Jugada(int[][] tauler, int columna, int jugador){
+        int resultat = -1;
+        boolean posat = false;
+        for (int i = tauler.length; i >= 0 && !posat; i--){
+            if (tauler[0][columna] != 0){
+                resultat = -1;
+                posat = true;
+            }else if (tauler[i][columna] == 0){
+               tauler [i][columna] = jugador;
+               posat = true;
+               resultat = i;
+            }
+                
+        }
+        return resultat;
     }
     
 }
