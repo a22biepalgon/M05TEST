@@ -13,40 +13,79 @@ import utils.Utils;
  */
 public class PràcticaUF2_8 {
 
+    public static final String ANSI_RED = "\u001B[31m";
+
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_RESET = "\u001B[0m";
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        int[][] taula = new int[4][4];
+        int numfiles = Utils.LlegirInt("Digues el numero de files que tindrà el tauler: ");
+        int numcolumnes = Utils.LlegirInt("Digues el numero de columnes que tindrà el tauler: ");
+        int[][] taula = new int[numfiles][numcolumnes];
         int jugador = 1;
         boolean sortir = false;
         while (!sortir) {
-            Imprimir(taula);
-            int columna = Utils.LlegirInt(scan, "Digues el numero de columna", 1, 4);
+            Dibuixa(taula);
+            int columna = Utils.LlegirInt(scan, "Digues el numero de columna: ", 1, numcolumnes);
             int fila = Jugada(taula, columna, jugador);
             while (fila == -1) {
                 System.out.println("La columna està plena");
-                columna = Utils.LlegirInt(scan, "Digues el numero de columna", 1, 4);
+                columna = Utils.LlegirInt(scan, "Digues el numero de columna: ", 1, numcolumnes);
                 fila = Jugada(taula, columna, jugador);
             }
-            if (EnRatlla(taula, fila, columna)) {
-                System.out.println("3 En ratlla");
-            }
+
             if (jugador == 1) {
                 jugador = 2;
             } else {
                 jugador = 1;
             }
+            if (EnRatlla(taula, fila, columna) || Ple(taula)) {
+                System.out.println("S'ha acabat la partida! ");
+                Dibuixa(taula);
+                System.out.println("Que vols fer? ");
+                String[] menu = {"Fer una altra partida"};
+                int seleccio = Utils.Menu(menu);
+                if (seleccio == 2) {
+                    sortir = true;
+                } else {
+                    numfiles = Utils.LlegirInt("Digues el numero de files que tindrà el tauler: ");
+                    numcolumnes = Utils.LlegirInt("Digues el numero de columnes que tindrà el tauler: ");
+                    taula = new int[numfiles][numcolumnes];
+                    jugador = 1;
+
+                }
+
+            }
         }
     }
 
-    public static void Imprimir(int[][] tauler) {
+    public static boolean Ple(int[][] tauler) {
+        boolean resultat = true;
+        for (int i = 0; i < tauler[0].length; i++) {
+            if (tauler[0][i] == 0) {
+                resultat = false;
+            }
+        }
+        return resultat;
+    }
+
+    public static void Dibuixa(int[][] tauler) {
         for (int i = 0; i < tauler.length; i++) {
             for (int j = 0; j < tauler[i].length; j++) {
-                System.out.print(tauler[i][j]);
+                if (tauler[i][j] == 1) {
+                    System.out.print(ANSI_BLUE + tauler[i][j] + ANSI_RESET);
+                } else if (tauler[i][j] == 2) {
+                    System.out.print(ANSI_RED + tauler[i][j] + ANSI_RESET);
+                } else {
+                    System.out.print(tauler[i][j]);
+                }
             }
             System.out.println("");
+
         }
     }
 
