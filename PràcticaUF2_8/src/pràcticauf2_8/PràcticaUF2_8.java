@@ -8,50 +8,70 @@ import java.util.Scanner;
 import utils.Utils;
 
 /**
- *
- * @author Biel
+ * Programa que simul·la el joc del Quatre en Ratlla
+ * @author Biel Palomar i Franc Villalba
  */
 public class PràcticaUF2_8 {
 
-    public static final String ANSI_RED = "\u001B[31m";
-
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m"; //Color vermell String
+    public static final String ANSI_BLUE = "\u001B[34m"; //Color blau String
+    public static final String ANSI_RESET = "\u001B[0m"; //Reset
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
+        //Demanem i validem els números de files i columnes del tauler
         int numfiles = Utils.LlegirInt("Digues el numero de files que tindrà el tauler: ");
         int numcolumnes = Utils.LlegirInt("Digues el numero de columnes que tindrà el tauler: ");
+        //Creem el tauler com una matriu d'enters
         int[][] taula = new int[numfiles][numcolumnes];
-        int jugador = 1;
+        int jugador = 1; //Comença el jugador 1
+        //Mentre no s'hagi seleccionat la opció de sortir, tot el programa funciona dins d'un while
         boolean sortir = false;
         while (!sortir) {
-            Dibuixa(taula);
-            int columna = Utils.LlegirInt(scan, "Digues el numero de columna: ", 1, numcolumnes);
+            Dibuixa(taula); //Cridem la funció Dibuixa per dibuixar el tauler
+            //Demanem i validem la columna on el jugador que li toca vol col·locar la següent fitxa
+            int columna = Utils.LlegirInt(scan,"Jugador " + jugador + ", digues el numero de columna: ", 1, numcolumnes);
+            //La fila on caurà la fitxa s'obté cridant la funció Jugada
             int fila = Jugada(taula, columna, jugador);
+            //Mentre la fila no sigui vàlida es torna a demanar dins d'un while fins que aquesta ho sigui
             while (fila == -1) {
                 System.out.println("La columna està plena");
-                columna = Utils.LlegirInt(scan, "Digues el numero de columna: ", 1, numcolumnes);
+                columna = Utils.LlegirInt(scan,"Jugador " + jugador + ", digues el numero de columna: ", 1, numcolumnes);
                 fila = Jugada(taula, columna, jugador);
             }
-
+            
+            //Canvi de torn
             if (jugador == 1) {
                 jugador = 2;
             } else {
                 jugador = 1;
             }
+            //Després de cada jugada s'avalua si ja hi ha un quatre en ratlla o bé si el tauler està ple. Es fa cridant les funcions EnRatlla i Ple
             if (EnRatlla(taula, fila, columna) || Ple(taula)) {
-                System.out.println("S'ha acabat la partida! ");
+                if (EnRatlla(taula, fila, columna)){
+                    if (jugador == 1) {
+                        jugador = 2;
+                    } else {
+                        jugador = 1;
+                    }
+                    System.out.println("Jugador " + jugador + ", has guanyat la partida!");
+                }
+                else{
+                    System.out.println("El tauler està ple, s'ha acabat la partida! ");
+                }
+                
                 Dibuixa(taula);
+                //Demanem què volen fer els usuaris quan acaba la partida, si fer una altra o sortir. Per a això, utilitzem la funció Menu de Utils
                 System.out.println("Que vols fer? ");
                 String[] menu = {"Fer una altra partida"};
                 int seleccio = Utils.Menu(menu);
                 if (seleccio == 2) {
                     sortir = true;
                 } else {
+                    //Comença una nova partida!
                     numfiles = Utils.LlegirInt("Digues el numero de files que tindrà el tauler: ");
                     numcolumnes = Utils.LlegirInt("Digues el numero de columnes que tindrà el tauler: ");
                     taula = new int[numfiles][numcolumnes];
@@ -63,8 +83,14 @@ public class PràcticaUF2_8 {
         }
     }
 
+    /**
+     * Avalua si el tauler està ple
+     * @param tauler Tauler de joc
+     * @return Retorna true si el tauler està ple i false si no ho està
+     */
     public static boolean Ple(int[][] tauler) {
-        boolean resultat = true;
+        boolean resultat = true; //Utilitzem un boolean resultat que indica si el tauler està ple
+        //Recorrem la primera fila per saber-ho
         for (int i = 0; i < tauler[0].length; i++) {
             if (tauler[0][i] == 0) {
                 resultat = false;
@@ -73,7 +99,12 @@ public class PràcticaUF2_8 {
         return resultat;
     }
 
+    /**
+     * Dibuixa l'estat actual del tauler
+     * @param tauler Tauler de joc
+     */
     public static void Dibuixa(int[][] tauler) {
+        //Recorrem la matriu del tauler i anem imprimint blau pel jugador 1 i vermell pel jugador 2
         for (int i = 0; i < tauler.length; i++) {
             for (int j = 0; j < tauler[i].length; j++) {
                 if (tauler[i][j] == 1) {
@@ -89,9 +120,22 @@ public class PràcticaUF2_8 {
         }
     }
 
+    /**
+     * Escriure una funció Jugada que a partir d’una matriu, un número de
+     * columna i un número de jugador, col·loqui si és possible la fitxa
+     * d’aquest jugador en la casella adequada de la columna donada. A més a
+     * més, la funció tornarà el número de la fila en què situa la fitxa, o el
+     * valor -1 si no es pot col·locar la fitxa.
+     *
+     * @param tauler Tauler de joc
+     * @param columna Columna on es vol afegir la fitxa
+     * @param jugador Jugador que li toca
+     * @return Retorna la fila on s'ha pogut afegir la fitxa. Serà -1 si no es pot afegir la fitxa
+     */
     public static int Jugada(int[][] tauler, int columna, int jugador) {
-        int resultat = -1;
-        boolean posat = false;
+        int resultat = -1; //Inicialment el resultat és -1, la fila que correspon per si no es pot afegir
+        boolean posat = false; //Boolean que ens indica si hem posat la fitxa o no
+        //Recorrem la columna on volem afegir la fitxa
         for (int i = tauler.length - 1; i >= 0 && !posat; i--) {
             if (tauler[0][columna - 1] != 0) {
                 resultat = -1;
@@ -128,7 +172,7 @@ public class PràcticaUF2_8 {
 
         //Iniciem variables per situar-nos en la fila i columna actuals
         int fila_actual = fila - 1; //Restem 1 a la fila i la columna perquè els índexos dels arrays són 1 número menys
-        int columna_actual = columna - 2;
+        int columna_actual = columna - 1;
 
         //HORTITZONTAL
         //Iniciem un comptador per les fitxes horitzontals
@@ -145,7 +189,7 @@ public class PràcticaUF2_8 {
             if (fitxes_horitzontals == 0) {
                 fitxes_horitzontals++;
             } //Resta de les fitxes
-            else if (fitxes_horitzontals != 0 && tauler[fila_actual][columna_actual] == tauler[fila][columna_actual + 1]) {
+            else if (fitxes_horitzontals != 0 && tauler[fila_actual][columna_actual] == tauler[fila_actual][columna_actual + 1]) {
                 fitxes_horitzontals++;
             }
             columna_actual--;
