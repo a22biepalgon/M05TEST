@@ -23,14 +23,19 @@ public class Exercici2 {
 
     static int Euclides(int x, int y) {
         int resultat = 0;
-        while (x != y) {
-            if (x > y) {
-                x = x - y;
-            } else if (y > x) {
-                y = y - x;
-            }
+
+        if (x > y) {
+            x = x - y;
+        } else if (y > x) {
+            y = y - x;
         }
-        resultat = x;
+
+        if (x != y) {
+            resultat = Euclides(x, y);
+        } else {
+            resultat = x;
+        }
         return resultat;
+
     }
 }
