@@ -13,14 +13,23 @@ import utils.Utils;
 public class Exercici2 {
 
     public static void main(String[] args) {
-
+        //Demanem els dos numeros per a fer el calcul
         int primer = Utils.LlegirInt("Digues el primer numero: ");
         int segon = Utils.LlegirInt("Digues el segon numero: ");
 
+        //Demanem el mcd crindant a la funció Euclides()
         int mcd = Euclides(primer, segon);
+        //Mostrem el resultat per pantalla
         System.out.println("El mcd de " + primer + " i " + segon + " és " + mcd);
+
     }
 
+    /**
+     * Aquesta funció calcula quin és el mcd de dos numeros amb la formula de euclides, i de manera recursiva
+     * @param x Primer numero de la formula
+     * @param y Segon numero de la formula
+     * @return retornem el mcd dels dos numeros introduits com a parametres
+     */
     static int Euclides(int x, int y) {
         int resultat = 0;
 
