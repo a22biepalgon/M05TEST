@@ -31,19 +31,27 @@ public class Exercici2 {
      * @return retornem el mcd dels dos numeros introduits com a parametres
      */
     static int Euclides(int x, int y) {
+        //Creem la variable resultat
         int resultat = 0;
 
+        //Mirem quin és el numero més gran
         if (x > y) {
+            //fem la resta
             x = x - y;
         } else if (y > x) {
+            //fem la resta
             y = y - x;
         }
 
+        //Mirem si tenim el mcd
         if (x != y) {
+            //si no el tenim tornem a cridar la funció un cop s'han restat els dos numeros
             resultat = Euclides(x, y);
         } else {
+            //si tenim el mcd retornem el valor de x 
             resultat = x;
         }
+        //retornem el resultat
         return resultat;
 
     }
