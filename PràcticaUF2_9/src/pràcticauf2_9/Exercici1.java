@@ -8,7 +8,7 @@ package pràcticauf2_9;
  *
  * @author ausias
  */
-public class PràcticaUF2_9 {
+public class Exercici1 {
 
     /**
      * @param args the command line arguments
