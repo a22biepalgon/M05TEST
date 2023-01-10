@@ -68,6 +68,22 @@ public class Utils {
     public static int LlegirInt(Scanner scan) {
         return LlegirInt(scan, null);
     }
+    
+    /**
+     * Demana amb un missatge un enter i comprova que sigui igual o més gran que el valorMin
+     * @param scan Pots posar el teu scanner
+     * @param missatge Escull quin missatge surt per pantalla a l'hora de demanar el numero
+     * @param valorMin El valor minim acceptable per el numero a retornar
+     * @return Retorna un enter llegit del teclat, que estigui entre valorMin i valorMax
+     */
+    public static int LlegirInt(Scanner scan, String missatge, int valorMin) {
+        int result = 0;
+        do {
+            result = LlegirInt(scan, missatge);
+        } while (result < valorMin);
+
+        return result;
+    }
 
     /**
      * Demana un numero i el comprova, entre els dos numeros de valor min i valor max, amb un missatge
