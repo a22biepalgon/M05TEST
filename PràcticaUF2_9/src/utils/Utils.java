@@ -119,7 +119,7 @@ public class Utils {
             if (dadesCorrectes) {
                 result = scan.nextInt();
             } else if (scan.hasNext()) {
-                scan.nextLine();
+                scan.next();
             }
         } while (!dadesCorrectes);
 

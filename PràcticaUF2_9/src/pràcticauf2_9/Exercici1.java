@@ -43,6 +43,15 @@ public class Exercici1 {
         int suma_m3 = m3(n3);
         //Imprimim
         System.out.println("El resultat de la funció m3 amb l'enter " + n3 + " és " + suma_m3);
+        
+        //d)
+        //Demanem i validem l'enter n
+        int n4 = utils.Utils.LlegirInt("Introdueix un enter: ");
+        scan.nextLine();
+        //Cridem la funció m4
+        int suma_m4 = m4(n4);
+        //Imprimim
+        System.out.println("El resultat de la funció m4 amb l'enter " + n4 + " és " + suma_m4);
     }
     
     //a)
@@ -82,7 +91,38 @@ public class Exercici1 {
     }
     
     //c)
+    /**
+     * Donat un enter n, es fa un bucle desde n fins que aquest sigui més petit que 2 al anar calculant la meitat d'aquest. En cada volta
+     * es suma 1 al resultat
+     * @param n Enter n
+     * @return Retorna la suma total
+     */
     public static int m3 (int n){
-        
+        /*Fem un for desde l'enter n, on en cada volta anem sumant 1 i dividint n entre 2
+        fins que n sigui més petit que 2*/
+        int resultat = 0;
+        for (int i=n;i>=2;i=i/2){
+            resultat++;
+        }
+        //Retornem el resultat
+        return resultat;
+    }
+    
+    //d)
+    /**
+     * Donat un enter n, es fa un bucle desde n fins que aquest sigui igual a 0 al anar dividint-lo entre 10. En cada volta
+     * es suma n%10 al resultat
+     * @param n Enter n
+     * @return Retorna la suma total
+     */
+    public static int m4 (int n){
+        /*Fem un for desde l'enter n, on en cada volta anem sumant el mòdul n%10 i dividint n entre 10
+        fins que n sigui igual a 0*/
+        int resultat = 0;
+        for (int i=n;i!=0;i=i/10){
+            resultat = resultat+i%10;
+        }
+        //Retornem el resultat
+        return resultat;
     }
 }
