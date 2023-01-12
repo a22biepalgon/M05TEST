@@ -5,8 +5,8 @@
 package pràcticauf2_9;
 
 /**
- *
- * @author ausias
+ * 
+ * @author Biel Palomar i Franc Villalba
  */
 public class Exercici3 {
 

@@ -8,7 +8,7 @@ import utils.Utils;
 
 /**
  *
- * @author ausias
+ * @author Biel Palomar i Franc Villalba
  */
 public class Exercici2 {
 
@@ -30,7 +30,7 @@ public class Exercici2 {
      * @param y Segon numero de la formula
      * @return retornem el mcd dels dos numeros introduits com a parametres
      */
-    static int Euclides(int x, int y) {
+    public static int Euclides(int x, int y) {
         //Creem la variable resultat
         int resultat = 0;
 
