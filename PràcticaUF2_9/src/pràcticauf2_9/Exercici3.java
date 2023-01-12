@@ -28,7 +28,7 @@ public class Exercici3 {
      * @param b un valor integer
      * @return retorna el resultat de a * b
      */
-    private static int Multiplicar(int a, int b) {
+    public static int Multiplicar(int a, int b) {
         //Creem la varible resultat
         int resultat = 0;
         //Si b no és 2 que torni a cridar a la funció restant 1 a b, i que sumi el restant + a
