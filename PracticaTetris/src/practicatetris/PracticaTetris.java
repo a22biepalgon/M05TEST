@@ -45,6 +45,13 @@ public class PracticaTetris {
 
     public static void DefinirPeçes() {
         
+        for (int i = 0; i < peçes.length; i++) {
+            //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa
+                peçes[i] = peça1;
+            
+        }
+        
+        
         for (int i = 0; i < peça1.length; i++) {
             for (int j = 0; j < peça1[i].length; j++) {
                 peça1[i][j] = "X";
