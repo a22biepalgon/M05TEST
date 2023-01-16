@@ -47,7 +47,7 @@ public class PracticaTetris {
         
         for (int i = 0; i < peçes.length; i++) {
             //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa
-                peçes[i] = peça1;
+                //peçes[i] = peça1;
             
         }
         
@@ -93,12 +93,12 @@ public class PracticaTetris {
         
         
         String peça = "peça" + numpeça;
-        for (int i = 0; i < peça.length; i++) {
+        /*for (int i = 0; i < peça.length; i++) {
             for (int j = 0; j < peça[i].length; j++) {
                 System.out.println(peça[i][j]);
             }
             System.out.println("");
-        }
+        }*/
     }
 
 }
