@@ -97,7 +97,7 @@ public class PracticaTetris {
             for (int j = 0; j < peça[i].length; j++) {
                 System.out.println(peça[i][j]);
             }
-            System.out.println("");
+            System.out.println("");aa
         }*/
     }
 
