@@ -13,12 +13,20 @@ import utils.Utils;
  * @author ausias
  */
 public class PracticaTetris {
-    
+
+    public class peça {
+
+        int files;
+        int columnes;
+
+    }
+
     static String[] peçes = new String[4];
     static String[][] peça1 = new String[2][2];
     static String[][] peça2 = new String[2][3];
     static String[][] peça3 = new String[3][2];
     static String[][] peça4 = new String[4][1];
+
     /**
      * @param args the command line arguments
      */
@@ -31,32 +39,53 @@ public class PracticaTetris {
         boolean partida_acabada = false;
 
         DefinirPeçes();
-        
+
         for (int i = 0; i < peça1.length; i++) {
             for (int j = 0; j < peça1[i].length; j++) {
                 System.out.println(peça1[i][j]);
             }
         }
-        
+
         while (!partida_acabada) {
             //MostrarPeça();
         }
     }
 
     public static void DefinirPeçes() {
-        
+
         for (int i = 0; i < peçes.length; i++) {
-            //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa
-                //peçes[i] = peça1;
-            
+            switch (i) {
+                case 0:
+                    peçes[i] = peça1;
+                    break;
+                case 1:
+                    peçes[i] = peça2;
+                    break;
+                case 2:
+                    peçes[i] = peça3;
+                    break;
+                case 3:
+                    peçes[i] = peça4;
+                    break;
+            }
         }
-        
-        
+
+        Crearpeça1();
+        Crearpeça2();
+        Crearpeça3();
+        Crearpeça4();
+
+    }
+
+    public static void Crearpeça1() {
         for (int i = 0; i < peça1.length; i++) {
             for (int j = 0; j < peça1[i].length; j++) {
                 peça1[i][j] = "X";
             }
         }
+    }
+
+    public static void Crearpeça2() {
 
         for (int i = 0; i < peça2.length; i++) {
             for (int j = 0; j < peça2[i].length; j++) {
@@ -68,7 +97,9 @@ public class PracticaTetris {
 
             }
         }
+    }
 
+    public static void Crearpeça3() {
         for (int i = 0; i < peça3.length; i++) {
             for (int j = 0; j < peça3[i].length; j++) {
                 if (j != 0) {
@@ -78,21 +109,21 @@ public class PracticaTetris {
                 }
             }
         }
+    }
+
+    public static void Crearpeça4() {
         for (int i = 0; i < peça4.length; i++) {
-                peça4[i][0] = "X";
+            peça4[i][0] = "X";
 
         }
-
     }
 
     public static void MostrarPeça() {
         Random rnd = new Random();
 
-        int numpeça = rnd.nextInt(5);
+        int numeropeça = rnd.nextInt(5);
 
-        
-        
-        String peça = "peça" + numpeça;
+        String peça = "peça" + numeropeça;
         /*for (int i = 0; i < peça.length; i++) {
             for (int j = 0; j < peça[i].length; j++) {
                 System.out.println(peça[i][j]);
