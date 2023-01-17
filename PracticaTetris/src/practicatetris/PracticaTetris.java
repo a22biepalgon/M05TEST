@@ -7,6 +7,9 @@ package practicatetris;
 import java.util.Random;
 import java.util.Scanner;
 import utils.Utils;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.JFrame;
 
 /**
  *
@@ -31,11 +34,58 @@ public class PracticaTetris {
         boolean partida_acabada = false;
 
         DefinirPeçes();
+        keypressed();
 
         while (!partida_acabada) {
             String[][] peçaactual = MostrarPeça();
-            
+            posicioinicial(peçaactual);
+            while (!enter) {
+                keypressed();
+                System.out.println(posicio);
+            }
+            scan.nextInt();
+            partida_acabada = true;
+
         }
+    }
+
+    public static void posicioinicial(String[][] peça) {
+        posicio = peça[0].length;
+        System.out.println(posicio);
+    }
+    static int posicio = 0;
+    static boolean enter = false;
+
+    public static void keypressed() {
+
+        JFrame myJFrame = new JFrame();
+
+        myJFrame.addKeyListener(new KeyAdapter() {
+
+            public void keyPressed(KeyEvent e) {
+
+                int keyCode = e.getKeyCode();
+
+                if (keyCode == KeyEvent.VK_LEFT) {
+
+                    posicio--;
+                    System.out.println("Left Arrrow-Key is pressed!");
+
+                } else if (keyCode == KeyEvent.VK_RIGHT) {
+
+                    posicio++;
+                    System.out.println("Right Arrrow-Key is pressed!");
+
+                } else if (keyCode == KeyEvent.VK_ENTER) {
+                    enter = true;
+                }
+
+            }
+
+        });
+
+        myJFrame.setVisible(true);
+
     }
 
     public static void DefinirPeçes() {
@@ -92,8 +142,8 @@ public class PracticaTetris {
         String[][] resultat = new String[10][5];
 
         int numeropeça = rnd.nextInt(5);
-        
-        while(numeropeça == 0){
+
+        while (numeropeça == 0) {
             numeropeça = rnd.nextInt(5);
         }
         switch (numeropeça) {
@@ -115,7 +165,7 @@ public class PracticaTetris {
             for (int j = 0; j < resultat[i].length; j++) {
                 if (resultat[i][j] != null) {
                     System.out.print(resultat[i][j]);
-                }else{
+                } else {
                     System.out.print(" ");
                 }
             }
