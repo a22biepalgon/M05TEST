@@ -14,14 +14,6 @@ import utils.Utils;
  */
 public class PracticaTetris {
 
-    public class peça {
-
-        int files;
-        int columnes;
-
-    }
-
-    static String[] peçes = new String[4];
     static String[][] peça1 = new String[2][2];
     static String[][] peça2 = new String[2][3];
     static String[][] peça3 = new String[3][2];
@@ -40,36 +32,13 @@ public class PracticaTetris {
 
         DefinirPeçes();
 
-        for (int i = 0; i < peça1.length; i++) {
-            for (int j = 0; j < peça1[i].length; j++) {
-                System.out.println(peça1[i][j]);
-            }
-        }
-
         while (!partida_acabada) {
-            //MostrarPeça();
+            String[][] peçaactual = MostrarPeça();
+            
         }
     }
 
     public static void DefinirPeçes() {
-
-        for (int i = 0; i < peçes.length; i++) {
-            switch (i) {
-                case 0:
-                    peçes[i] = peça1;
-                    break;
-                case 1:
-                    peçes[i] = peça2;
-                    break;
-                case 2:
-                    peçes[i] = peça3;
-                    break;
-                case 3:
-                    peçes[i] = peça4;
-                    break;
-            }
-        }
-
         Crearpeça1();
         Crearpeça2();
         Crearpeça3();
@@ -102,10 +71,10 @@ public class PracticaTetris {
     public static void Crearpeça3() {
         for (int i = 0; i < peça3.length; i++) {
             for (int j = 0; j < peça3[i].length; j++) {
-                if (j != 0) {
+                if (i == 2) {
                     peça3[i][j] = "X";
                 } else {
-                    peça3[2][0] = "X";
+                    peça3[i][1] = "X";
                 }
             }
         }
@@ -118,18 +87,42 @@ public class PracticaTetris {
         }
     }
 
-    public static void MostrarPeça() {
+    public static String[][] MostrarPeça() {
         Random rnd = new Random();
+        String[][] resultat = new String[10][5];
 
         int numeropeça = rnd.nextInt(5);
+        
+        while(numeropeça == 0){
+            numeropeça = rnd.nextInt(5);
+        }
+        switch (numeropeça) {
+            case 1:
+                resultat = peça1;
+                break;
+            case 2:
+                resultat = peça2;
+                break;
+            case 3:
+                resultat = peça3;
+                break;
+            case 4:
+                resultat = peça4;
+                break;
+        }
 
-        String peça = "peça" + numeropeça;
-        /*for (int i = 0; i < peça.length; i++) {
-            for (int j = 0; j < peça[i].length; j++) {
-                System.out.println(peça[i][j]);
+        for (int i = 0; i < resultat.length; i++) {
+            for (int j = 0; j < resultat[i].length; j++) {
+                if (resultat[i][j] != null) {
+                    System.out.print(resultat[i][j]);
+                }else{
+                    System.out.print(" ");
+                }
             }
-            System.out.println("");aa
-        }*/
+            System.out.println("");
+        }
+        System.out.println("");
+        return resultat;
     }
 
 }
