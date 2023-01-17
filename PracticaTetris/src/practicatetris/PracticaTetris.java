@@ -39,13 +39,33 @@ public class PracticaTetris {
         while (!partida_acabada) {
             String[][] peçaactual = MostrarPeça();
             posicioinicial(peçaactual);
+
+            int aux = posicio;
             while (!enter) {
-                keypressed();
-                System.out.println(posicio);
+
+                if (posicio != aux) {
+                    aux = posicio;
+                    MourePeça(tauler);
+                    System.out.println("Canvi");
+                }
             }
+
             scan.nextInt();
             partida_acabada = true;
 
+        }
+    }
+
+    public static void MourePeça(String[][] tauler) {
+        for (int i = 0; i < tauler; i++) {
+            if (i == 0) {
+                System.out.println("|");
+            }
+            for (int j = 0; j < tauler[i]; j++) {
+                if (tauler[i][j] = null) {
+                    System.out.println("·");
+                }
+            }
         }
     }
 
@@ -66,18 +86,18 @@ public class PracticaTetris {
 
                 int keyCode = e.getKeyCode();
 
-                if (keyCode == KeyEvent.VK_LEFT) {
-
-                    posicio--;
-                    System.out.println("Left Arrrow-Key is pressed!");
-
-                } else if (keyCode == KeyEvent.VK_RIGHT) {
-
-                    posicio++;
-                    System.out.println("Right Arrrow-Key is pressed!");
-
-                } else if (keyCode == KeyEvent.VK_ENTER) {
-                    enter = true;
+                switch (keyCode) {
+                    case KeyEvent.VK_LEFT:
+                        posicio--;
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        posicio++;
+                        break;
+                    case KeyEvent.VK_ENTER:
+                        enter = true;
+                        break;
+                    default:
+                        break;
                 }
 
             }
