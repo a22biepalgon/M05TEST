@@ -27,7 +27,7 @@ public class PracticaTetris {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args){
+    public static void main(String[] args) {
         // TODO code application logic here
         Scanner scan = new Scanner(System.in);
         int columnes = Utils.LlegirInt(scan, "Digues la quantitat de columnes: ", 3, 20);
@@ -51,7 +51,7 @@ public class PracticaTetris {
     }
 
     public static void MourePeça(String[][] tauler, String[][] peça, Scanner scan) {
-        
+
         for (int i = 0; i < peça.length; i++) {
             for (int j = 0; j < peça[i].length; j++) {
                 if (peça[i][j] != null) {
@@ -59,10 +59,10 @@ public class PracticaTetris {
                 }
             }
         }
+
         ImprimirTauler(tauler);
         String moure = scan.nextLine();
-        
-         
+
     }
 
     public static void ImprimirTauler(String[][] tauler) {
@@ -73,13 +73,13 @@ public class PracticaTetris {
                 if (j == 0) {
                     System.out.print("|");
                 }
-                if (tauler[i][j] != null){
+                if (tauler[i][j] != null) {
                     System.out.print(tauler[i][j]);
-                }else if (i < 4){
+                } else if (i < 4) {
                     System.out.print("*");
-                }else if (tauler[i][j] == null) {
+                } else if (tauler[i][j] == null) {
                     System.out.print("·");
-                } 
+                }
 
                 if (j == tauler[i].length - 1) {
                     System.out.print("|");
@@ -167,17 +167,6 @@ public class PracticaTetris {
             case 4:
                 resultat = peça4;
                 break;
-        }
-
-        for (int i = 0; i < resultat.length; i++) {
-            for (int j = 0; j < resultat[i].length; j++) {
-                if (resultat[i][j] != null) {
-                    System.out.print(resultat[i][j]);
-                } else {
-                    System.out.print(" ");
-                }
-            }
-            System.out.println("");
         }
         System.out.println("");
         return resultat;
