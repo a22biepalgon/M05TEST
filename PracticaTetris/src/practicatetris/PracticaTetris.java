@@ -40,14 +40,16 @@ public class PracticaTetris {
 
         while (!partida_acabada) {
             String[][] peçaactual = MostrarPeça();
-            while (!enter) {
+        {
                 MourePeça(tauler, peçaactual, scan);
 
-            }
+        
             punts = punts + comprovarLinies(tauler);
             partida_acabada = comprovarPartida(tauler);
 
         }
+        
+        System.out.println("Els teus punts han sigut: " + punts);
     }
 
     public static boolean comprovarPartida(String[][] tauler) {
