@@ -34,6 +34,7 @@ public class PracticaTetris {
         int files = Utils.LlegirInt(scan, "Digues la quantitat de files: ", 4, 20);
         String[][] tauler = new String[files + 4][columnes];
         boolean partida_acabada = false;
+        int punts = 0;
 
         DefinirPeçes();
 
@@ -43,10 +44,74 @@ public class PracticaTetris {
                 MourePeça(tauler, peçaactual, scan);
 
             }
+            punts = punts + comprovarLinies(tauler);
+            partida_acabada = comprovarPartida(tauler);
 
-            scan.nextInt();
-            partida_acabada = true;
+        }
+    }
 
+    public static boolean comprovarPartida(String[][] tauler) {
+        boolean resultat = false;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < tauler[i].length; j++) {
+                if (tauler[i][j] != null) {
+                    resultat = true;
+                }
+            }
+        }
+
+        return resultat;
+    }
+
+    public static int comprovarLinies(String[][] tauler) {
+        int resultat = 0;
+        int contador_linies = 0;
+        for (int i = 0; i < tauler.length; i++) {
+            boolean linia_sencera = true;
+            for (int j = 0; j < tauler[i].length; j++) {
+                if (tauler[i][j] == null) {
+                    linia_sencera = false;
+                }
+            }
+            if (linia_sencera) {
+                for (int j = 0; j < tauler[i].length; j++) {
+                    tauler[i][j] = null;
+                }
+                MoureLinies(tauler, i);
+                contador_linies++;
+            }
+
+        }
+        resultat = punts(contador_linies);
+        return resultat;
+    }
+
+    public static int punts(int linies) {
+        int resultat = 0;
+        int bonus = 1;
+        switch (linies) {
+            case 1:
+                bonus = 1;
+                break;
+            case 2:
+                bonus = 22;
+                break;
+            case 3:
+                bonus = 33;
+                break;
+            case 4:
+                bonus = 44;
+                break;
+        }
+        resultat = linies * 1000 * bonus;
+        return resultat;
+    }
+
+    public static void MoureLinies(String[][] tauler, int index) {
+        for (int i = index; i > 0; i--) {
+            for (int j = 0; j < tauler[i].length; j++) {
+                tauler[i][j] = tauler[i - 1][j];
+            }
         }
     }
 
