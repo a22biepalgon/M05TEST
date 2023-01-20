@@ -39,7 +39,10 @@ public class PracticaTetris {
         DefinirPeçes();
 
         while (!partida_acabada) {
-            String[][] peçaactual = MostrarPeça();
+            String[][] peça_actual = DecidirPeça(tauler);
+            int posicio = ColocarPeçaTauler(peça_actual,tauler);
+            while (!enter) {
+                MourePeça(tauler, peça_actual, posicio, scan);
 
             MourePeça(tauler, peçaactual, scan);
 
@@ -115,19 +118,26 @@ public class PracticaTetris {
         }
     }
 
-    public static void MourePeça(String[][] tauler, String[][] peça, Scanner scan) {
-
-        for (int i = 0; i < peça.length; i++) {
-            for (int j = 0; j < peça[i].length; j++) {
-                if (peça[i][j] != null) {
-                    tauler[i][j] = peça[i][j];
-                }
-            }
-        }
-
+    public static void MourePeça(String[][] tauler, String[][] peça, int posicio, Scanner scan){
+        //Calculem quantes posicions es pot moure a cada costat
+        //Dreta
+        int posicions_dreta = tauler.length-posicio;
+        //Esquerra
+        int posicions_esquerra = posicio;
+        
         ImprimirTauler(tauler);
         String moure = scan.nextLine();
-
+        boolean validacio_string_moure = false;
+        while (!validacio_string_moure){
+            if (moure.length()==2 && (moure.charAt(0)=='d'||moure.charAt(0)=='e')){
+                if (moure.charAt(0)=='d' || moure.charAt(0)=='D'){
+                    if ()
+                }
+                
+            }
+        }
+        
+        
     }
 
     public static void ImprimirTauler(String[][] tauler) {
@@ -210,7 +220,7 @@ public class PracticaTetris {
         }
     }
 
-    public static String[][] MostrarPeça() {
+    public static String[][] DecidirPeça(String[][] tauler) {
         Random rnd = new Random();
         String[][] resultat = new String[10][5];
 
@@ -234,7 +244,24 @@ public class PracticaTetris {
                 break;
         }
         System.out.println("");
+        
         return resultat;
+        
+    }
+    
+    public static int ColocarPeçaTauler (String [][] peça, String [][] tauler){
+        for (int i = 0; i < peça.length; i++) {
+            for (int j = 0; j < peça[i].length; j++) {
+                if (peça[i][j] != null) {
+                    tauler[i][j] = peça[i][j];
+                }
+            }
+        }
+        /*Ens quedem també amb la posició inicial de la peça en el tauler, la seva última columna
+        bàsicament*/
+        int posicio = peça.length;
+        //Retornem la posició
+        return posicio;
     }
 
 }
