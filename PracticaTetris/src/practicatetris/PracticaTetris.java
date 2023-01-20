@@ -9,6 +9,8 @@ import java.util.Scanner;
 import utils.Utils;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JFrame;
 
 /**
@@ -25,29 +27,21 @@ public class PracticaTetris {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args){
         // TODO code application logic here
         Scanner scan = new Scanner(System.in);
         int columnes = Utils.LlegirInt(scan, "Digues la quantitat de columnes: ", 3, 20);
         int files = Utils.LlegirInt(scan, "Digues la quantitat de files: ", 4, 20);
-        String[][] tauler = new String[files][columnes];
+        String[][] tauler = new String[files + 4][columnes];
         boolean partida_acabada = false;
 
         DefinirPeçes();
-        keypressed();
 
         while (!partida_acabada) {
             String[][] peçaactual = MostrarPeça();
-            posicioinicial(peçaactual);
-
-            int aux = posicio;
             while (!enter) {
+                MourePeça(tauler, peçaactual, scan);
 
-                if (posicio != aux) {
-                    aux = posicio;
-                    MourePeça(tauler);
-                    System.out.println("Canvi");
-                }
             }
 
             scan.nextInt();
@@ -56,57 +50,51 @@ public class PracticaTetris {
         }
     }
 
-    public static void MourePeça(String[][] tauler) {
-        for (int i = 0; i < tauler; i++) {
-            if (i == 0) {
-                System.out.println("|");
-            }
-            for (int j = 0; j < tauler[i]; j++) {
-                if (tauler[i][j] = null) {
-                    System.out.println("·");
+    public static void MourePeça(String[][] tauler, String[][] peça, Scanner scan) {
+        
+        for (int i = 0; i < peça.length; i++) {
+            for (int j = 0; j < peça[i].length; j++) {
+                if (peça[i][j] != null) {
+                    tauler[i][j] = peça[i][j];
                 }
             }
         }
+        ImprimirTauler(tauler);
+        String moure = scan.nextLine();
+        
+         
     }
 
-    public static void posicioinicial(String[][] peça) {
-        posicio = peça[0].length;
-        System.out.println(posicio);
-    }
-    static int posicio = 0;
-    static boolean enter = false;
+    public static void ImprimirTauler(String[][] tauler) {
+        for (int i = 0; i < tauler.length; i++) {
 
-    public static void keypressed() {
+            for (int j = 0; j < tauler[i].length; j++) {
 
-        JFrame myJFrame = new JFrame();
-
-        myJFrame.addKeyListener(new KeyAdapter() {
-
-            public void keyPressed(KeyEvent e) {
-
-                int keyCode = e.getKeyCode();
-
-                switch (keyCode) {
-                    case KeyEvent.VK_LEFT:
-                        posicio--;
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        posicio++;
-                        break;
-                    case KeyEvent.VK_ENTER:
-                        enter = true;
-                        break;
-                    default:
-                        break;
+                if (j == 0) {
+                    System.out.print("|");
                 }
+                if (tauler[i][j] != null){
+                    System.out.print(tauler[i][j]);
+                }else if (i < 4){
+                    System.out.print("*");
+                }else if (tauler[i][j] == null) {
+                    System.out.print("·");
+                } 
 
+                if (j == tauler[i].length - 1) {
+                    System.out.print("|");
+                }
             }
 
-        });
-
-        myJFrame.setVisible(true);
+            System.out.println("");
+        }
+        for (int i = 4; i < tauler.length + 2; i++) {
+            System.out.print("-");
+        }
+        System.out.println("");
 
     }
+    static boolean enter = false;
 
     public static void DefinirPeçes() {
         Crearpeça1();
@@ -196,3 +184,6 @@ public class PracticaTetris {
     }
 
 }
+
+
+//Thread.sleep(1000);
