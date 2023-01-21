@@ -115,6 +115,7 @@ public class Utils {
             dadesCorrectes = scan.hasNextInt();
             if (dadesCorrectes) {
                 result = scan.nextInt();
+                scan.nextLine();
             } else if (scan.hasNext()) {
                 scan.nextLine();
             }
