@@ -7,11 +7,6 @@ package practicatetris;
 import java.util.Random;
 import java.util.Scanner;
 import utils.Utils;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.swing.JFrame;
 
 /**
  *
@@ -24,7 +19,12 @@ public class PracticaTetris {
     static String[][] peça3 = new String[3][2];
     static String[][] peça4 = new String[4][1];
     
+    static boolean partida_acabada = false;
+    static int punts = 0;
+    
+    static String [][] peça_actual;
     static int [] posicio = {0,0};
+    
 
     /**
      * @param args the command line arguments
@@ -34,210 +34,21 @@ public class PracticaTetris {
         Scanner scan = new Scanner(System.in);
         int columnes = Utils.LlegirInt(scan, "Digues la quantitat de columnes: ", 3, 20);
         int files = Utils.LlegirInt(scan, "Digues la quantitat de files: ", 4, 20);
-        scan.nextLine();
-        String[][] tauler = new String[files + 4][columnes];
-        boolean partida_acabada = false;
-        int punts = 0;
-
+        String [][] tauler = new String [files+4][columnes];
         DefinirPeçes();
+        peça_actual = DecidirPeça(tauler);
+        MostrarPeça(peça_actual,tauler,posicio);
+        ImprimirTauler(tauler);
 
         while (!partida_acabada) {
-            String[][] peça_actual = DecidirPeça(tauler);
-            MostrarPeça(peça_actual, tauler, posicio);
-            ImprimirTauler(tauler);
-            boolean peça_fixada = ComprovarPeçaFixada(tauler,peça_actual,posicio);
-            while (!enter && !peça_fixada) {
-                
                 MourePeça(tauler,peça_actual,posicio,scan);
-                
-                
-
-                punts = punts + comprovarLinies(tauler);
+                //punts = punts + comprovarLinies(tauler);
+                //System.out.println("Els teus punts han sigut: " + punts);
                 partida_acabada = comprovarPartida(tauler);
-                
-                System.out.println("Els teus punts han sigut: " + punts);
-                MostrarPeça(peça_actual,tauler,posicio);
-                ImprimirTauler(tauler);
-                peça_fixada = ComprovarPeçaFixada(tauler,peça_actual,posicio);
-                
-            }
-            
+                BorrarZonaPecesNoves(tauler);
         }
-    }
-
-    public static boolean comprovarPartida(String[][] tauler) {
-        boolean resultat = false;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < tauler[i].length; j++) {
-                if (tauler[i][j] != null) {
-                    resultat = true;
-                }
-            }
-        }
-
-        return resultat;
-    }
-
-    public static int comprovarLinies(String[][] tauler) {
-        int resultat = 0;
-        int contador_linies = 0;
-        for (int i = 0; i < tauler.length; i++) {
-            boolean linia_sencera = true;
-            for (int j = 0; j < tauler[i].length; j++) {
-                if (tauler[i][j] == null) {
-                    linia_sencera = false;
-                }
-            }
-            if (linia_sencera) {
-                for (int j = 0; j < tauler[i].length; j++) {
-                    tauler[i][j] = null;
-                }
-                MoureLinies(tauler, i);
-                contador_linies++;
-            }
-
-        }
-        resultat = punts(contador_linies);
-        return resultat;
-    }
-
-    public static int punts(int linies) {
-        int resultat = 0;
-        int bonus = 1;
-        switch (linies) {
-            case 1:
-                bonus = 1;
-                break;
-            case 2:
-                bonus = 22;
-                break;
-            case 3:
-                bonus = 33;
-                break;
-            case 4:
-                bonus = 44;
-                break;
-        }
-        resultat = linies * 1000 * bonus;
-        return resultat;
-    }
-
-    public static void MoureLinies(String[][] tauler, int index) {
-        for (int i = index; i > 0; i--) {
-            for (int j = 0; j < tauler[i].length; j++) {
-                tauler[i][j] = tauler[i - 1][j];
-            }
-        }
-    }
-
-    public static void MourePeça(String[][] tauler, String[][] peça, int [] posicio, Scanner scan){
-        //Calculem quantes posicions es pot moure a cada costat
-        //Dreta
-        int posicions_dreta = tauler.length-peça.length;
-        //Esquerra
-        int posicions_esquerra = posicio[1];
-        
-        String moure = scan.nextLine();
-        //Donar-li al enter vol dir que vols fer caure la peça. Mirem si l'usuari ha premut enter
-        if (moure.equals("")){
-            enter = true;
-        }
-        boolean validacio_string_moure = false;
-        while (!validacio_string_moure){
-            if (moure.length()==2 && (moure.charAt(0)=='d' || moure.charAt(0)=='e' || moure.charAt(0)=='D' || moure.charAt(0)=='E')){
-                //Validació dreta
-                if (moure.charAt(0)=='d' || moure.charAt(0)=='D'){
-                    if (Character.isDigit(moure.charAt(1))){
-                        if (Integer.parseInt(""+moure.charAt(1))<=posicions_dreta){
-                            validacio_string_moure = true;
-                            BorrarPeça(peça,tauler,posicio);
-                            posicio[1] = posicio[1] + Integer.parseInt(""+moure.charAt(1));
-                            posicio[0]++;
-                        }
-                    }
-                }    
-                //Validació esquerra
-                if (moure.charAt(0)=='e' || moure.charAt(0)=='E'){
-                    if (Character.isDigit(moure.charAt(1))){
-                        if (Integer.parseInt(""+moure.charAt(1))<=posicions_esquerra){
-                            validacio_string_moure = true;
-                            BorrarPeça(peça,tauler,posicio);
-                            posicio[1] = posicio[1] - Integer.parseInt(""+moure.charAt(1));
-                            posicio[0]++;
-                        }
-                    }
-                }
-            }
-            else {
-                moure = scan.nextLine();
-            }
-            
-        }
-        
-        
     }
     
-    public static boolean ComprovarPeçaFixada (String [][] tauler, String [][] peça, int posicio []){
-        //Comprovem si una peça està fixada perquè ja s'ha posicionat sobre una altra mirant si la base toca per sota amb una altra peça
-        boolean peça_fixada = false;
-        if (posicio[0]>=4 && posicio[0]+peça.length < tauler.length){
-            for (int i = posicio[1]; i < peça.length; i++) {
-                if (tauler[posicio[0]+peça.length][i] != null) {
-                    peça_fixada = true;
-                    posicio[0] = 0;
-                    posicio[1] = 0;
-                }
-            }
-        }
-        else if (tauler.length-posicio[0]==peça.length){
-            peça_fixada = true;
-            posicio[0] = 0;
-            posicio[1] = 0;
-        }
-        //Retornem si la peça està fixada
-        return peça_fixada;
-        
-    }
-
-    public static void ImprimirTauler(String[][] tauler) {
-        for (int i = 0; i < tauler.length; i++) {
-
-            for (int j = 0; j < tauler[i].length; j++) {
-
-                if (j == 0) {
-                    System.out.print("|");
-                }
-                if (tauler[i][j] != null) {
-                    System.out.print(tauler[i][j]);
-                } else if (i < 4) {
-                    System.out.print("*");
-                } else if (tauler[i][j] == null) {
-                    System.out.print("·");
-                }
-
-                if (j == tauler[i].length - 1) {
-                    System.out.print("|");
-                }
-            }
-
-            System.out.println("");
-        }
-        for (int i = 4; i < tauler.length + 2; i++) {
-            System.out.print("-");
-        }
-        System.out.println("");
-
-    }
-    static boolean enter = false;
-
-    public static void DefinirPeçes() {
-        Crearpeça1();
-        Crearpeça2();
-        Crearpeça3();
-        Crearpeça4();
-
-    }
-
     public static void Crearpeça1() {
         for (int i = 0; i < peça1.length; i++) {
             for (int j = 0; j < peça1[i].length; j++) {
@@ -245,7 +56,7 @@ public class PracticaTetris {
             }
         }
     }
-
+    
     public static void Crearpeça2() {
 
         for (int i = 0; i < peça2.length; i++) {
@@ -259,7 +70,7 @@ public class PracticaTetris {
             }
         }
     }
-
+    
     public static void Crearpeça3() {
         for (int i = 0; i < peça3.length; i++) {
             for (int j = 0; j < peça3[i].length; j++) {
@@ -271,14 +82,22 @@ public class PracticaTetris {
             }
         }
     }
-
+    
     public static void Crearpeça4() {
         for (int i = 0; i < peça4.length; i++) {
             peça4[i][0] = "X";
 
         }
     }
+    
+    public static void DefinirPeçes() {
+        Crearpeça1();
+        Crearpeça2();
+        Crearpeça3();
+        Crearpeça4();
 
+    }
+    
     public static String[][] DecidirPeça(String[][] tauler) {
         Random rnd = new Random();
         String[][] resultat = new String[10][5];
@@ -308,6 +127,13 @@ public class PracticaTetris {
         
     }
     
+    public static void ColocarPeçaNova (String [][] tauler){
+        peça_actual = DecidirPeça(tauler);
+        posicio[0] = 0;
+        posicio[1] = 0;
+        MostrarPeça(peça_actual,tauler,posicio);
+    }
+    
     public static void MostrarPeça (String [][] peça, String [][] tauler, int [] posicio){
         for (int i = 0; i < peça.length; i++) {
             for (int j = 0; j < peça[i].length; j++) {
@@ -327,6 +153,225 @@ public class PracticaTetris {
             }
         }
     }
+    
+    public static void ImprimirTauler(String[][] tauler) {
+        for (int i = 0; i < tauler.length; i++) {
+
+            for (int j = 0; j < tauler[i].length; j++) {
+
+                if (j == 0) {
+                    System.out.print("|");
+                }
+                if (tauler[i][j] != null) {
+                    System.out.print(tauler[i][j]);
+                } else if (i < 4) {
+                    System.out.print("*");
+                } else if (tauler[i][j] == null) {
+                    System.out.print("·");
+                }
+
+                if (j == tauler[i].length - 1) {
+                    System.out.print("|");
+                }
+            }
+
+            System.out.println("");
+        }
+        for (int i = 4; i < tauler.length + 2; i++) {
+            System.out.print("-");
+        }
+        System.out.println("");
+
+    }
+    
+    
+    public static void MourePeça(String[][] tauler, String[][] peça, int [] posicio, Scanner scan){
+        //Calculem quantes posicions es pot moure a cada costat
+        //Dreta
+        int posicions_dreta = tauler.length-peça.length;
+        //Esquerra
+        int posicions_esquerra = posicio[1];
+        
+        String string_moure = scan.nextLine();
+        boolean validacio_moure_dreta = ValidacioMoureDreta(string_moure,posicions_dreta);
+        boolean validacio_moure_esquerra = ValidacioMoureEsquerra(string_moure,posicions_esquerra);
+        boolean validacio_caure_peça = ValidacioCaurePeça(string_moure);
+        while (!validacio_moure_dreta && !validacio_moure_esquerra && !validacio_caure_peça){
+            validacio_moure_dreta = ValidacioMoureDreta(string_moure,posicions_dreta);
+            validacio_moure_esquerra = ValidacioMoureEsquerra(string_moure,posicions_esquerra);
+            validacio_caure_peça = ValidacioCaurePeça(string_moure);
+        }
+        Moviment(tauler,string_moure,validacio_moure_dreta,validacio_moure_esquerra,validacio_caure_peça);
+    }
+    
+    public static boolean ValidacioMoureDreta (String string_moure, int posicions_dreta){
+        boolean validacio_moure_dreta = false;
+        if (string_moure.length() == 2) {
+            if (string_moure.charAt(0) == 'd' || string_moure.charAt(0) == 'D') {
+                if (Character.isDigit(string_moure.charAt(1))) {
+                    if (Integer.parseInt("" + string_moure.charAt(1)) <= posicions_dreta) {
+                        validacio_moure_dreta = true;
+                    }
+                }
+            }
+        }
+        
+        return validacio_moure_dreta;
+    }
+    
+    public static boolean ValidacioMoureEsquerra (String string_moure, int posicions_esquerra){
+        boolean validacio_moure_esquerra = false;
+        if (string_moure.length() == 2) {
+            if (string_moure.charAt(0) == 'e' || string_moure.charAt(0) == 'E') {
+                if (Character.isDigit(string_moure.charAt(1))) {
+                    if (Integer.parseInt("" + string_moure.charAt(1)) <= posicions_esquerra) {
+                        validacio_moure_esquerra = true;
+                    }
+                }
+            }
+        }
+        
+        return validacio_moure_esquerra;
+    }
+    
+    public static boolean ValidacioCaurePeça (String string_moure){
+        boolean validacio_caure_peça = false;
+        if (string_moure.equals("")){
+            validacio_caure_peça = true;
+        }
+        return validacio_caure_peça;
+    }
+    
+    public static void Moviment (String [][] tauler, String string_moure, boolean validacio_moure_dreta, boolean validacio_moure_esquerra, boolean validacio_caure_peça){
+        BorrarPeça(peça_actual,tauler,posicio);
+        if (validacio_moure_dreta || validacio_moure_esquerra){
+            if (validacio_moure_dreta){
+                posicio[1] = posicio[1] + Integer.parseInt(""+string_moure.charAt(1));
+            }
+            else{
+                posicio[1] = posicio[1] - Integer.parseInt(""+string_moure.charAt(1));
+            }
+            posicio[0]++;
+            boolean peça_fixada = ComprovarPeçaFixada(tauler,peça_actual,posicio);
+        }
+        else{
+            FerCaureLaPeça(tauler,peça_actual,posicio);
+        }
+        ImprimirTauler(tauler);
+    }
+    
+    public static void FerCaureLaPeça (String [][] tauler, String [][] peça, int [] posicio){
+        //Anem baixant la peça fins que ComprovarPeçaFixada detecti que la peça ja està fixada
+        boolean peça_fixada = false;
+        while (!peça_fixada){
+            BorrarPeça(peça_actual,tauler,posicio);
+            posicio[0]++;
+            peça_fixada = ComprovarPeçaFixada(tauler,peça,posicio);
+        }
+    }
+    
+    public static boolean ComprovarPeçaFixada (String [][] tauler, String [][] peça, int posicio []){
+        //Comprovem si una peça està fixada perquè ja s'ha posicionat sobre una altra mirant si la base toca per sota amb una altra peça
+        
+        boolean peça_fixada = false;
+        if (posicio[0]+peça.length < tauler.length){
+            for (int i = posicio[1]; i < peça[0].length; i++) {
+                if (tauler[posicio[0]+peça.length][i] != null) {
+                    peça_fixada = true;
+                    
+                }
+            }
+        }
+        else if (tauler.length-posicio[0]==peça.length){
+            peça_fixada = true;
+        }
+        MostrarPeça(peça,tauler,posicio);
+        if (peça_fixada){
+            ColocarPeçaNova(tauler);
+        }
+        
+        return peça_fixada;
+    }
+    
+    public static int comprovarLinies(String[][] tauler) {
+        int resultat = 0;
+        int contador_linies = 0;
+        for (int i = 0; i < tauler.length; i++) {
+            boolean linia_sencera = true;
+            for (int j = 0; j < tauler[i].length; j++) {
+                if (tauler[i][j] == null) {
+                    linia_sencera = false;
+                }
+            }
+            if (linia_sencera) {
+                for (int j = 0; j < tauler[i].length; j++) {
+                    tauler[i][j] = null;
+                }
+                MoureLinies(tauler, i);
+                contador_linies++;
+            }
+
+        }
+        resultat = punts(contador_linies);
+        return resultat;
+    }
+    
+    public static void MoureLinies(String[][] tauler, int index) {
+        for (int i = index; i > 0; i--) {
+            for (int j = 0; j < tauler[i].length; j++) {
+                tauler[i][j] = tauler[i - 1][j];
+            }
+        }
+    }
+    
+    public static int punts(int linies) {
+        int resultat = 0;
+        int bonus = 1;
+        switch (linies) {
+            case 1:
+                bonus = 1;
+                break;
+            case 2:
+                bonus = 22;
+                break;
+            case 3:
+                bonus = 33;
+                break;
+            case 4:
+                bonus = 44;
+                break;
+        }
+        resultat = linies * 1000 * bonus;
+        return resultat;
+    }
+    
+    public static boolean comprovarPartida(String[][] tauler) {
+        boolean resultat = false;
+        for (int i = 0; i < tauler[4].length; i++) {
+                if (tauler[4][i] != null) {
+                    resultat = true;
+                }
+            
+        }
+
+        return resultat;
+    }
+    
+    public static void BorrarZonaPecesNoves (String [][] tauler){
+        if (partida_acabada) {
+            for (int i = 0; i <= 3; i++) {
+                for (int j = 0; j < tauler[0].length; j++) {
+                    if (tauler[i][j] != null) {
+                        tauler[i][j] = null;
+                    }
+                }
+
+            }
+        }
+        ImprimirTauler(tauler);
+        
+    }
+
 }
 
 
