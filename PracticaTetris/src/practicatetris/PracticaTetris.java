@@ -23,6 +23,8 @@ public class PracticaTetris {
     static String[][] peça2 = new String[2][3];
     static String[][] peça3 = new String[3][2];
     static String[][] peça4 = new String[4][1];
+    
+    static int [] posicio = {0,0};
 
     /**
      * @param args the command line arguments
@@ -32,6 +34,7 @@ public class PracticaTetris {
         Scanner scan = new Scanner(System.in);
         int columnes = Utils.LlegirInt(scan, "Digues la quantitat de columnes: ", 3, 20);
         int files = Utils.LlegirInt(scan, "Digues la quantitat de files: ", 4, 20);
+        scan.nextLine();
         String[][] tauler = new String[files + 4][columnes];
         boolean partida_acabada = false;
         int punts = 0;
@@ -40,16 +43,25 @@ public class PracticaTetris {
 
         while (!partida_acabada) {
             String[][] peça_actual = DecidirPeça(tauler);
-            int posicio = ColocarPeçaTauler(peça_actual,tauler);
-            while (!enter) {
-                MourePeça(tauler, peça_actual, posicio, scan);
+            MostrarPeça(peça_actual, tauler, posicio);
+            ImprimirTauler(tauler);
+            boolean peça_fixada = ComprovarPeçaFixada(tauler,peça_actual,posicio);
+            while (!enter && !peça_fixada) {
+                
+                MourePeça(tauler,peça_actual,posicio,scan);
+                
+                
 
-            MourePeça(tauler, peçaactual, scan);
-
-            punts = punts + comprovarLinies(tauler);
-            partida_acabada = comprovarPartida(tauler);
-
-            System.out.println("Els teus punts han sigut: " + punts);
+                punts = punts + comprovarLinies(tauler);
+                partida_acabada = comprovarPartida(tauler);
+                
+                System.out.println("Els teus punts han sigut: " + punts);
+                MostrarPeça(peça_actual,tauler,posicio);
+                ImprimirTauler(tauler);
+                peça_fixada = ComprovarPeçaFixada(tauler,peça_actual,posicio);
+                
+            }
+            
         }
     }
 
@@ -118,25 +130,72 @@ public class PracticaTetris {
         }
     }
 
-    public static void MourePeça(String[][] tauler, String[][] peça, int posicio, Scanner scan){
+    public static void MourePeça(String[][] tauler, String[][] peça, int [] posicio, Scanner scan){
         //Calculem quantes posicions es pot moure a cada costat
         //Dreta
-        int posicions_dreta = tauler.length-posicio;
+        int posicions_dreta = tauler.length-peça.length;
         //Esquerra
-        int posicions_esquerra = posicio;
+        int posicions_esquerra = posicio[1];
         
-        ImprimirTauler(tauler);
         String moure = scan.nextLine();
+        //Donar-li al enter vol dir que vols fer caure la peça. Mirem si l'usuari ha premut enter
+        if (moure.equals("")){
+            enter = true;
+        }
         boolean validacio_string_moure = false;
         while (!validacio_string_moure){
-            if (moure.length()==2 && (moure.charAt(0)=='d'||moure.charAt(0)=='e')){
+            if (moure.length()==2 && (moure.charAt(0)=='d' || moure.charAt(0)=='e' || moure.charAt(0)=='D' || moure.charAt(0)=='E')){
+                //Validació dreta
                 if (moure.charAt(0)=='d' || moure.charAt(0)=='D'){
-                    if ()
+                    if (Character.isDigit(moure.charAt(1))){
+                        if (Integer.parseInt(""+moure.charAt(1))<=posicions_dreta){
+                            validacio_string_moure = true;
+                            BorrarPeça(peça,tauler,posicio);
+                            posicio[1] = posicio[1] + Integer.parseInt(""+moure.charAt(1));
+                            posicio[0]++;
+                        }
+                    }
+                }    
+                //Validació esquerra
+                if (moure.charAt(0)=='e' || moure.charAt(0)=='E'){
+                    if (Character.isDigit(moure.charAt(1))){
+                        if (Integer.parseInt(""+moure.charAt(1))<=posicions_esquerra){
+                            validacio_string_moure = true;
+                            BorrarPeça(peça,tauler,posicio);
+                            posicio[1] = posicio[1] - Integer.parseInt(""+moure.charAt(1));
+                            posicio[0]++;
+                        }
+                    }
                 }
-                
             }
+            else {
+                moure = scan.nextLine();
+            }
+            
         }
         
+        
+    }
+    
+    public static boolean ComprovarPeçaFixada (String [][] tauler, String [][] peça, int posicio []){
+        //Comprovem si una peça està fixada perquè ja s'ha posicionat sobre una altra mirant si la base toca per sota amb una altra peça
+        boolean peça_fixada = false;
+        if (posicio[0]>=4 && posicio[0]+peça.length < tauler.length){
+            for (int i = posicio[1]; i < peça.length; i++) {
+                if (tauler[posicio[0]+peça.length][i] != null) {
+                    peça_fixada = true;
+                    posicio[0] = 0;
+                    posicio[1] = 0;
+                }
+            }
+        }
+        else if (tauler.length-posicio[0]==peça.length){
+            peça_fixada = true;
+            posicio[0] = 0;
+            posicio[1] = 0;
+        }
+        //Retornem si la peça està fixada
+        return peça_fixada;
         
     }
 
@@ -249,21 +308,25 @@ public class PracticaTetris {
         
     }
     
-    public static int ColocarPeçaTauler (String [][] peça, String [][] tauler){
+    public static void MostrarPeça (String [][] peça, String [][] tauler, int [] posicio){
         for (int i = 0; i < peça.length; i++) {
             for (int j = 0; j < peça[i].length; j++) {
                 if (peça[i][j] != null) {
-                    tauler[i][j] = peça[i][j];
+                    tauler[i+posicio[0]][j+posicio[1]] = peça[i][j];
                 }
             }
         }
-        /*Ens quedem també amb la posició inicial de la peça en el tauler, la seva última columna
-        bàsicament*/
-        int posicio = peça.length;
-        //Retornem la posició
-        return posicio;
     }
-
+    
+    public static void BorrarPeça (String [][] peça, String [][] tauler, int [] posicio){
+        for (int i = 0; i < peça.length; i++) {
+            for (int j = 0; j < peça[i].length; j++) {
+                if (peça[i][j] != null) {
+                    tauler[i+posicio[0]][j+posicio[1]] = null;
+                }
+            }
+        }
+    }
 }
 
 
