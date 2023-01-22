@@ -41,8 +41,7 @@ public class PracticaTetris {
 
         while (!partida_acabada) {
                 MourePeça(tauler,peça_actual,posicio,scan);
-                //punts = punts + comprovarLinies(tauler);
-                //System.out.println("Els teus punts han sigut: " + punts);
+                punts = punts + comprovarLinies(tauler);
                 BorrarZonaPecesNoves(tauler);
         }
         System.out.println("Els teus punts han sigut: " + punts);
