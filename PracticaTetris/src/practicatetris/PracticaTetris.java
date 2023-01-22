@@ -40,10 +40,10 @@ public class PracticaTetris {
         ImprimirTauler(tauler);
 
         while (!partida_acabada) {
-            MourePeça(tauler, peça_actual, posicio, scan);
-            punts = punts + comprovarLinies(tauler);
-            partida_acabada = comprovarPartida(tauler);
-            BorrarZonaPecesNoves(tauler);
+                MourePeça(tauler,peça_actual,posicio,scan);
+                //punts = punts + comprovarLinies(tauler);
+                //System.out.println("Els teus punts han sigut: " + punts);
+                BorrarZonaPecesNoves(tauler);
         }
         System.out.println("Els teus punts han sigut: " + punts);
 
@@ -187,7 +187,7 @@ public class PracticaTetris {
     public static void MourePeça(String[][] tauler, String[][] peça, int[] posicio, Scanner scan) {
         //Calculem quantes posicions es pot moure a cada costat
         //Dreta
-        int posicions_dreta = tauler.length  - peça.length;
+        int posicions_dreta = tauler[0].length-posicio[1]-peça[0].length;
         //Esquerra
         int posicions_esquerra = posicio[1];
 
@@ -195,9 +195,10 @@ public class PracticaTetris {
         boolean validacio_moure_dreta = ValidacioMoureDreta(string_moure, posicions_dreta);
         boolean validacio_moure_esquerra = ValidacioMoureEsquerra(string_moure, posicions_esquerra);
         boolean validacio_caure_peça = ValidacioCaurePeça(string_moure);
-        while (!validacio_moure_dreta && !validacio_moure_esquerra && !validacio_caure_peça) {
-            validacio_moure_dreta = ValidacioMoureDreta(string_moure, posicions_dreta);
-            validacio_moure_esquerra = ValidacioMoureEsquerra(string_moure, posicions_esquerra);
+        while (!validacio_moure_dreta && !validacio_moure_esquerra && !validacio_caure_peça){
+            string_moure = scan.nextLine();
+            validacio_moure_dreta = ValidacioMoureDreta(string_moure,posicions_dreta);
+            validacio_moure_esquerra = ValidacioMoureEsquerra(string_moure,posicions_esquerra);
             validacio_caure_peça = ValidacioCaurePeça(string_moure);
         }
         Moviment(tauler, string_moure, validacio_moure_dreta, validacio_moure_esquerra, validacio_caure_peça);
@@ -254,7 +255,6 @@ public class PracticaTetris {
         } else {
             FerCaureLaPeça(tauler, peça_actual, posicio);
         }
-        ImprimirTauler(tauler);
     }
 
     public static void FerCaureLaPeça(String[][] tauler, String[][] peça, int[] posicio) {
@@ -284,6 +284,7 @@ public class PracticaTetris {
         MostrarPeça(peça, tauler, posicio);
         if (peça_fixada) {
             ColocarPeçaNova(tauler);
+            partida_acabada = comprovarPartida(tauler);
         }
 
         return peça_fixada;
