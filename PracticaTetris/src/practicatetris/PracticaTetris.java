@@ -195,13 +195,27 @@ public class PracticaTetris {
 
     }
 
+    /**
+     * Aquest procediment serveix per a seleccionar una nova`peça aleatoria i inserirla al tauler
+     * @param tauler necesita el tauler com a parametre
+     */
     public static void ColocarPeçaNova(String[][] tauler) {
+        //Decidim la peça aleatoriament
         peça_actual = DecidirPeça();
+        //Posem la posició a 0, 0
         posicio[0] = 0;
         posicio[1] = 0;
+        
+        //Mostrem la peça
         MostrarPeça(peça_actual, tauler, posicio);
     }
 
+    /**
+     * Aquest procediment ensenya el tauler amb la peça nova
+     * @param peça necesita la peça que estem fent servir ara mateix
+     * @param tauler neceista el String[][] del tauler
+     * @param posicio necesita la posició actual de la peça
+     */
     public static void MostrarPeça(String[][] peça, String[][] tauler, int[] posicio) {
         for (int i = 0; i < peça.length; i++) {
             for (int j = 0; j < peça[i].length; j++) {
@@ -212,6 +226,12 @@ public class PracticaTetris {
         }
     }
 
+    /**
+     * Aquest procediment serveix per a esborrar la peça antiga després de haver-la mogut
+     * @param peça necesita saber quina és la peça actual
+     * @param tauler Necesita el string[][] del tauler
+     * @param posicio Necesita saber la posició inicial de la peça
+     */
     public static void BorrarPeça(String[][] peça, String[][] tauler, int[] posicio) {
         for (int i = 0; i < peça.length; i++) {
             for (int j = 0; j < peça[i].length; j++) {
@@ -269,6 +289,13 @@ public class PracticaTetris {
 
     }
 
+    /**
+     * Aquest procediment detecta el que s'escriu per el teclat, i fa comprovacions per a veure cap a on ho ha de moure
+     * @param tauler Demana el String[][] del tauler
+     * @param peça Demana la peça actual
+     * @param posicio Demana la posicio de la peça
+     * @param scan Demana el scanner
+     */
     public static void MourePeça(String[][] tauler, String[][] peça, int[] posicio, Scanner scan) {
         //Calculem quantes posicions es pot moure a cada costat
         //Dreta
@@ -289,6 +316,12 @@ public class PracticaTetris {
         Moviment(tauler, string_moure, validacio_moure_dreta, validacio_moure_esquerra, validacio_caure_peça);
     }
 
+    /**
+     * Aquesta funció serveix per a veure si l'entrada del teclat és una d + un numero, i comprova si es pot moure
+     * @param string_moure Necesita el string de la comanda per moure
+     * @param posicions_dreta se li pasarà el total de espais en blanc que hi ha a la dreta de la peça
+     * @return retorna un true si es pot moure la peça a la dreta i un false si no
+     */
     public static boolean ValidacioMoureDreta(String string_moure, int posicions_dreta) {
         boolean validacio_moure_dreta = false;
         if (string_moure.length() == 2) {
@@ -304,6 +337,12 @@ public class PracticaTetris {
         return validacio_moure_dreta;
     }
 
+    /**
+     * Aquesta funció serveix per a veure si l'entrada del teclat és una e + un numero, i comprova que hi hagi suficient espai a la esquerra de la peça per a moure-la
+     * @param string_moure El input del teclat que ha posat l'usuari
+     * @param posicions_esquerra El numero de posicions lliures a l'esquerra de la peça
+     * @return Retorna un true si es pot moure, i un false si no es pot
+     */
     public static boolean ValidacioMoureEsquerra(String string_moure, int posicions_esquerra) {
         boolean validacio_moure_esquerra = false;
         if (string_moure.length() == 2) {
@@ -319,6 +358,11 @@ public class PracticaTetris {
         return validacio_moure_esquerra;
     }
 
+    /**
+     * Detecta si l'entrada és un enter
+     * @param string_moure Necesita l'entrada del teclat
+     * @return retorna un true si l'entrada és un enter i un false si no ho és
+     */
     public static boolean ValidacioCaurePeça(String string_moure) {
         boolean validacio_caure_peça = false;
         if (string_moure.equals("")) {
@@ -326,7 +370,15 @@ public class PracticaTetris {
         }
         return validacio_caure_peça;
     }
-
+    
+    /**
+     * Aquest procediment mou una peça el numero de cops que se li hagi dit
+     * @param tauler String[]][ del tauler
+     * @param string_moure entrada del teclat
+     * @param validacio_moure_dreta funció ValidacioMoureDreta()
+     * @param validacio_moure_esquerra funció ValidacioMoureEsquerra()
+     * @param validacio_caure_peça funcio ValidacioCaurePeça
+     */
     public static void Moviment(String[][] tauler, String string_moure, boolean validacio_moure_dreta, boolean validacio_moure_esquerra, boolean validacio_caure_peça) {
         BorrarPeça(peça_actual, tauler, posicio);
         if (validacio_moure_dreta || validacio_moure_esquerra) {
@@ -341,7 +393,13 @@ public class PracticaTetris {
             FerCaureLaPeça(tauler, peça_actual, posicio);
         }
     }
-
+    
+    /**
+     * Aques procediment fa caure la peça fins a baix de tot, fins que arribi fins al final del taulell o xoqui amb una altre peça
+     * @param tauler String[][] del tauler
+     * @param peça peça actual
+     * @param posicio posicio de la p´ça actual
+     */
     public static void FerCaureLaPeça(String[][] tauler, String[][] peça, int[] posicio) {
         //Anem baixant la peça fins que ComprovarPeçaFixada detecti que la peça ja està fixada
         boolean peça_fixada = false;
@@ -351,7 +409,14 @@ public class PracticaTetris {
             peça_fixada = ComprovarPeçaFixada(tauler, peça, posicio);
         }
     }
-
+    
+    /**
+     * Aquesta funció comprova si la peça ha arribat al seu top, i quan ha arribat, mira si la aprtida ha acabat
+     * @param tauler String[][] del tauler
+     * @param peça Strig[][] de la peça
+     * @param posicio posicio actual de la peça
+     * @return retorna true si la peça ha arribat al final i un false si no
+     */
     public static boolean ComprovarPeçaFixada(String[][] tauler, String[][] peça, int posicio[]) {
         //Comprovem si una peça està fixada perquè ja s'ha posicionat sobre una altra mirant si la base toca per sota amb una altra peça
 
