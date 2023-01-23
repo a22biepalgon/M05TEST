@@ -14,14 +14,32 @@ import utils.Utils;
  */
 public class PracticaTetris {
 
+    //Declarem els strings per a cada peça
+    /**
+     * Peça 1 es tracta de un quadrat 2x2
+     */
     static String[][] peça1 = new String[2][2];
+
+    /**
+     * Peça2 es tracta de una L
+     */
     static String[][] peça2 = new String[2][3];
+
+    /**
+     * Peça3 es tracta de una J
+     */
     static String[][] peça3 = new String[3][2];
+
+    /**
+     * Peça 4 es tracta de un pal de 4 de alçaad |
+     */
     static String[][] peça4 = new String[4][1];
 
+    //Declarem la variable partida_acabada i els punts
     static boolean partida_acabada = false;
     static int punts = 0;
 
+    //Declarem un string per a retenir la peça actual i la seva posició en tot moment
     static String[][] peça_actual;
     static int[] posicio = {0, 0};
 
@@ -30,24 +48,47 @@ public class PracticaTetris {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        //Inserim l'escaner
         Scanner scan = new Scanner(System.in);
+
+        //Demanem el numero de columnes del taulell, amb un valor minim de 3 i un maxim de 20
         int columnes = Utils.LlegirInt(scan, "Digues la quantitat de columnes: ", 3, 20);
+
+        //Demanem el numero de files del taulell, amb un minim de 4 i un màxim de 20
         int files = Utils.LlegirInt(scan, "Digues la quantitat de files: ", 4, 20);
+
+        //Creem el tauler
         String[][] tauler = new String[files + 4][columnes];
+
+        //Executem el procediment que creearà les peçes
         DefinirPeçes();
-        peça_actual = DecidirPeça(tauler);
+
+        //Decidim una peça al atzar i la posem a la variable peça actual
+        peça_actual = DecidirPeça();
+        //Mostrem la peça, que el que fa és moure peça_actual a dins del tauler
         MostrarPeça(peça_actual, tauler, posicio);
+
+        //Imprimim el tauler
         ImprimirTauler(tauler);
 
+        //Fem un while per a que s'executi el programa fins que partida_acabada sigui true
         while (!partida_acabada) {
-                MourePeça(tauler,peça_actual,posicio,scan);
-                punts = punts + comprovarLinies(tauler);
-                BorrarZonaPecesNoves(tauler);
+            //Executem la funció mourePeça(), que com el seu nom indica, va movent la peça fins que arriba a un punt on no pot baixar més
+            MourePeça(tauler, peça_actual, posicio, scan);
+
+            //Calculem els punts i mirem si hi ha alguna linia completa a la vegada
+            punts = punts + comprovarLinies(tauler);
+            //Esborrem la xona nova, per a que quedi més net
+            BorrarZonaPecesNoves(tauler);
         }
+        //Quan acaba el programa imprimim el nombre de punts que l'usuari ha aconseguit
         System.out.println("Els teus punts han sigut: " + punts);
 
     }
 
+    /**
+     * Aquest procediment crea la peça 1 que es tracta de un quadrat de 2x2
+     */
     public static void Crearpeça1() {
         for (int i = 0; i < peça1.length; i++) {
             for (int j = 0; j < peça1[i].length; j++) {
@@ -56,6 +97,10 @@ public class PracticaTetris {
         }
     }
 
+    /**
+     * Aquest procediment crea la peça 2, la cual tracta de una L de 3 d'altura
+     * i 2 d'amplada
+     */
     public static void Crearpeça2() {
 
         for (int i = 0; i < peça2.length; i++) {
@@ -70,6 +115,10 @@ public class PracticaTetris {
         }
     }
 
+    /**
+     * Aquest procediment crea la peça 3, la cual és una J de 3 d'altura i 2
+     * d'amplada
+     */
     public static void Crearpeça3() {
         for (int i = 0; i < peça3.length; i++) {
             for (int j = 0; j < peça3[i].length; j++) {
@@ -82,6 +131,9 @@ public class PracticaTetris {
         }
     }
 
+    /**
+     * Aquest proçediment crea la peça 4 que tracta de un pal de 4 d'altura
+     */
     public static void Crearpeça4() {
         for (int i = 0; i < peça4.length; i++) {
             peça4[i][0] = "X";
@@ -89,6 +141,9 @@ public class PracticaTetris {
         }
     }
 
+    /**
+     * Aquest procediment crida les funcions crea peça d'una en una
+     */
     public static void DefinirPeçes() {
         Crearpeça1();
         Crearpeça2();
@@ -97,15 +152,28 @@ public class PracticaTetris {
 
     }
 
-    public static String[][] DecidirPeça(String[][] tauler) {
+    /**
+     * Aquesta funció decideix una de les peçes creades aleatoriament
+     *
+     * @return Retorna una peça aleatoria de les que tenim creades
+     */
+    public static String[][] DecidirPeça() {
+        //Inserim el objecte random
         Random rnd = new Random();
-        String[][] resultat = new String[10][5];
+        //Definim les variables de amplitud i alçada m+àxima de qualsevo peça
+        final int ALCADAMAXIMA = 10;
+        final int AMPLITUDMAXIMA = 5;
+        final int NUMPECES = 4 + 1;
+        //Creem una variable resultat lo suficientment gran per a que càpigui qualsevol peça
+        String[][] resultat = new String[ALCADAMAXIMA][AMPLITUDMAXIMA];
 
-        int numeropeça = rnd.nextInt(5);
-
+        //Escollim un numero random, que no pot ser 0, fins el numero de pees que tinguem
+        int numeropeça = rnd.nextInt(NUMPECES);
         while (numeropeça == 0) {
-            numeropeça = rnd.nextInt(5);
+            numeropeça = rnd.nextInt(NUMPECES);
         }
+
+        //Fem un switch per a posar el resultat = una peça diferent depepent dell numero random
         switch (numeropeça) {
             case 1:
                 resultat = peça1;
@@ -122,12 +190,13 @@ public class PracticaTetris {
         }
         System.out.println("");
 
+        //Retornem el resultat
         return resultat;
 
     }
 
     public static void ColocarPeçaNova(String[][] tauler) {
-        peça_actual = DecidirPeça(tauler);
+        peça_actual = DecidirPeça();
         posicio[0] = 0;
         posicio[1] = 0;
         MostrarPeça(peça_actual, tauler, posicio);
@@ -153,32 +222,49 @@ public class PracticaTetris {
         }
     }
 
+    /**
+     * Aquest procediment imprimeix el tauler, delimitant-lo amb | i - i posant
+     * · on no hi ha ninguna peça
+     *
+     * @param tauler Neceista el String[][] tauler per a poder-se executar
+     */
     public static void ImprimirTauler(String[][] tauler) {
-        for (int i = 0; i < tauler.length; i++) {
+        //Creem la constant de la alçada de la zona de aparició
+        final int ZONAAPARICIO = 4;
 
+        //Creem un for que iteri per tot el tauler
+        for (int i = 0; i < tauler.length; i++) {
+            //Iterem per totes les columnes
             for (int j = 0; j < tauler[i].length; j++) {
 
+                //Si estem a la primera columna imprimim | per al delimitant
                 if (j == 0) {
                     System.out.print("|");
                 }
+                //Si la posició conté alguna cosa, la imprimim
                 if (tauler[i][j] != null) {
                     System.out.print(tauler[i][j]);
-                } else if (i < 4) {
+                    //Si el tauler es troba a la zona de aparició imprimim * en coomptes de ·
+                } else if (i < ZONAAPARICIO) {
                     System.out.print("*");
+                    //Si és null imprimim ·
                 } else if (tauler[i][j] == null) {
                     System.out.print("·");
                 }
 
+                //Si estem a la última columna imprimim |
                 if (j == tauler[i].length - 1) {
                     System.out.print("|");
                 }
             }
-
+            //Imprimim un enter per a saltar de linia
             System.out.println("");
         }
-        for (int i = 4; i < tauler.length + 2; i++) {
+        //Si ens trobem al final imprimim -
+        for (int i = ZONAAPARICIO; i < tauler.length + 2; i++) {
             System.out.print("-");
         }
+        //Imprimim un espai
         System.out.println("");
 
     }
@@ -186,7 +272,7 @@ public class PracticaTetris {
     public static void MourePeça(String[][] tauler, String[][] peça, int[] posicio, Scanner scan) {
         //Calculem quantes posicions es pot moure a cada costat
         //Dreta
-        int posicions_dreta = tauler[0].length-posicio[1]-peça[0].length;
+        int posicions_dreta = tauler[0].length - posicio[1] - peça[0].length;
         //Esquerra
         int posicions_esquerra = posicio[1];
 
@@ -194,10 +280,10 @@ public class PracticaTetris {
         boolean validacio_moure_dreta = ValidacioMoureDreta(string_moure, posicions_dreta);
         boolean validacio_moure_esquerra = ValidacioMoureEsquerra(string_moure, posicions_esquerra);
         boolean validacio_caure_peça = ValidacioCaurePeça(string_moure);
-        while (!validacio_moure_dreta && !validacio_moure_esquerra && !validacio_caure_peça){
+        while (!validacio_moure_dreta && !validacio_moure_esquerra && !validacio_caure_peça) {
             string_moure = scan.nextLine();
-            validacio_moure_dreta = ValidacioMoureDreta(string_moure,posicions_dreta);
-            validacio_moure_esquerra = ValidacioMoureEsquerra(string_moure,posicions_esquerra);
+            validacio_moure_dreta = ValidacioMoureDreta(string_moure, posicions_dreta);
+            validacio_moure_esquerra = ValidacioMoureEsquerra(string_moure, posicions_esquerra);
             validacio_caure_peça = ValidacioCaurePeça(string_moure);
         }
         Moviment(tauler, string_moure, validacio_moure_dreta, validacio_moure_esquerra, validacio_caure_peça);
@@ -290,11 +376,14 @@ public class PracticaTetris {
     }
 
     /**
-     * Aquesta funció comprova linia per linia per a veure si té alguna completa, quan troba una completa l'esborra i suma un 1 al contador de linies, després crida a la funció punts() per a calcular quants punts se sumen
+     * Aquesta funció comprova linia per linia per a veure si té alguna
+     * completa, quan troba una completa l'esborra i suma un 1 al contador de
+     * linies, després crida a la funció punts() per a calcular quants punts se
+     * sumen
+     *
      * @param tauler demana el string[][] del tauler
      * @return retorna un integer amb la quantitat de punts guanyats
      */
-    
     public static int comprovarLinies(String[][] tauler) {
         int resultat = 0;
         int contador_linies = 0;
@@ -317,13 +406,14 @@ public class PracticaTetris {
         resultat = punts(contador_linies);
         return resultat;
     }
-    
+
     /**
-     * Aquest procediment mou totes les linies cap abaix quan es trenca la que tenien a sota
+     * Aquest procediment mou totes les linies cap abaix quan es trenca la que
+     * tenien a sota
+     *
      * @param tauler necesita el String[][] del tauler
      * @param index Necesita el index on s'ha trencat la fila
      */
-
     public static void MoureLinies(String[][] tauler, int index) {
         for (int i = index; i > 4; i--) {
             for (int j = 0; j < tauler[i].length; j++) {
@@ -331,15 +421,15 @@ public class PracticaTetris {
             }
         }
     }
-    
-    
-    
+
     /**
-     * Aquesta funció calcula el numero de punts depenent de quantes linies s'hagin trencat de cop
-     * @param linies Necesita el numero de linies que s'han trencat en aquellla jugada
+     * Aquesta funció calcula el numero de punts depenent de quantes linies
+     * s'hagin trencat de cop
+     *
+     * @param linies Necesita el numero de linies que s'han trencat en aquellla
+     * jugada
      * @return Retorna el resultatde les linies * bonus
      */
-
     public static int punts(int linies) {
         int resultat = 0;
         int bonus = 1;
@@ -362,11 +452,13 @@ public class PracticaTetris {
     }
 
     /**
-     * Comprova que la zona d'apari´ió estigui buida, si no esta buida, la partida acaba
+     * Comprova que la zona d'apari´ió estigui buida, si no esta buida, la
+     * partida acaba
+     *
      * @param tauler Necesita el String[][] del tauler
-     * @return Retonra un true si la aprtida ha acabat, i un false si la aprtida segueix
+     * @return Retonra un true si la aprtida ha acabat, i un false si la aprtida
+     * segueix
      */
-    
     public static boolean comprovarPartida(String[][] tauler) {
         boolean resultat = false;
         for (int i = 0; i < tauler[4].length; i++) {
