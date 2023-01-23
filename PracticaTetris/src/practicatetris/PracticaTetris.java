@@ -471,6 +471,10 @@ public class PracticaTetris {
         return resultat;
     }
 
+    /**
+     * Aqeust procediment esborra tot el contingut de la zona de peçes noces si la partida ha acabat
+     * @param tauler Necesita el String[][] del tauler
+     */
     public static void BorrarZonaPecesNoves(String[][] tauler) {
         if (partida_acabada) {
             for (int i = 0; i <= 3; i++) {
@@ -487,6 +491,3 @@ public class PracticaTetris {
     }
 
 }
-
-
-//Thread.sleep(1000);
