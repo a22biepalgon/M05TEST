@@ -357,13 +357,13 @@ public class PracticaTetris {
 
         boolean peça_fixada = false;
         if (posicio[0] + peça.length < tauler.length) {
-            for (int i = posicio[1]; i < peça[0].length; i++) {
+            for (int i = posicio[1]; i < posicio[1]+peça[0].length; i++) {
                 if (tauler[posicio[0] + peça.length][i] != null) {
                     peça_fixada = true;
 
                 }
             }
-        } else if (tauler.length - posicio[0] == peça.length) {
+        } if (tauler.length - posicio[0] == peça.length && !peça_fixada) {
             peça_fixada = true;
         }
         MostrarPeça(peça, tauler, posicio);
