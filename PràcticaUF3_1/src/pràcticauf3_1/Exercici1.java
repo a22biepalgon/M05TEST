@@ -30,7 +30,7 @@ public class Exercici1 {
    
         FileWriter writer = new FileWriter(f,false);
         PrintWriter pw = new PrintWriter(writer);
-        
+      
         //Fem un while per anar guardant en l'arxiu fins que el que entri per teclat sigui una cadena buida
         String frase_afegir = scan.nextLine();
         while (!frase_afegir.equals("")){

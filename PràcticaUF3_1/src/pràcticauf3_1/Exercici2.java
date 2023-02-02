@@ -11,14 +11,14 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
- * Amplia el programa anterior per tal que: 
- * a) Si el fitxer no existeix, que el generi. 
- * b) Si el fitxer ja existeix, que afegeixi el contingut al final. 
- * c) Si l’usuari escriu @ESBORRA, cal esborrar el contingut del fitxer.
+ * Amplia el programa anterior per tal que: a) Si el fitxer no existeix, que el
+ * generi. b) Si el fitxer ja existeix, que afegeixi el contingut al final. c)
+ * Si l’usuari escriu @ESBORRA, cal esborrar el contingut del fitxer.
  *
  * @author Biel Palomar i Franc Villalba
  */
 public class Exercici2 {
+
     /**
      * @param args the command line arguments
      */
@@ -29,9 +29,9 @@ public class Exercici2 {
         //Creem els objectes File, FileWriter i PrintWriter
         File f = new File("./textos.txt");
         //a) Si el fitxer no existeix, el generem
-        if ( f.exists() ){
+        if (f.exists()) {
             f.createNewFile();
-        }    
+        }
         //b) Modifiquem l'argument append del FileWriter a true per a què afegeixi el contingut al final del fitxer
         FileWriter writer = new FileWriter(f, true);
         PrintWriter pw = new PrintWriter(writer);
@@ -39,8 +39,16 @@ public class Exercici2 {
         //Fem un while per anar guardant en l'arxiu fins que el que entri per teclat sigui una cadena buida
         String frase_afegir = scan.nextLine();
         while (!frase_afegir.equals("")) {
-            pw.println(frase_afegir);
+            if (frase_afegir.equals("@ESBORRA")) {
+                FileWriter writerr = new FileWriter(f, false);
+                pw.println("");
+                writerr.close();
+            } else {
+                pw.println(frase_afegir);
+
+            }
             frase_afegir = scan.nextLine();
+
         }
         pw.flush();
         writer.close();
