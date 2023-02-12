@@ -44,7 +44,7 @@ public class Utils {
      * Crea un scan i crida la mateixa funció però amb el scan com a paràmetre
      *
      * @return Retorna l'enter validat, que passa per LlegirInt(Scanner
-     * scan)>LlegirInt(Scanner scan, String missatge)
+     * scan LlegirInt(Scanner scan, String missatge)
      */
     public static int LlegirInt() {
         //S'inicia el resultat
