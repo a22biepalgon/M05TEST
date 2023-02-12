@@ -447,7 +447,7 @@ public class Utils {
         }
         System.out.println(""); //Deixem una línia de separació
         //La registrem cridant LlegirInt()
-        int opcio_escollida = LlegirInt(scan,"Escolleix una opcio (numero): ",1,array_opcions.length);
+        int opcio_escollida = LlegirInt(scan,"Escull una opcio (numero): ",1,array_opcions.length);
         //Retornem l'opció escollida
         return opcio_escollida;
     }
