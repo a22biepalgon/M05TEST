@@ -117,9 +117,9 @@ public class PràcticaUF3_2 {
     }
     
     public static File ObrirFitxer (String nom_fitxer){
-        File result = null;
+        
 
-        result = new File(nom_fitxer);
+        File result = new File(nom_fitxer);
 
         if (!result.exists()) {
                 try {
@@ -128,9 +128,7 @@ public class PràcticaUF3_2 {
                     Logger.getLogger(PràcticaUF3_2.class.getName()).log(Level.SEVERE, null, ex);
                     result = null;
                 }
-            } else {
-                result = null;
-            }
+            } 
         
 
         return result;
@@ -586,10 +584,11 @@ public class PràcticaUF3_2 {
     public static void LlistatClients() throws IOException {
         //Obrim el fitxer de lectura
         BufferedReader buffer = ObrirFitxerLectura(NOM_FITXER);
-        //Recorrem les línies i les anem imprimint
-        int numero_linies = (int) buffer.lines().count();
-        for (int i = 0; i < numero_linies; i++) {
-            System.out.println(buffer.readLine());
+        //Imprimim les línies
+        String linia = buffer.readLine();
+        while (linia!=null) {
+            System.out.println(linia);
+            linia = buffer.readLine();
         }
     }
 }
