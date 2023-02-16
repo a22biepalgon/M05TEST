@@ -187,7 +187,7 @@ public class PràcticaUF3_2 {
     
     public static void BorrarFitxer (String nom_fitxer){
         File f = new File(nom_fitxer);
-        f.delete();
+        f.delete();       
     }
     
     public static void RenombrarFitxer (String nom_fitxer_inici, String nom_fitxer_final){
@@ -337,7 +337,7 @@ public class PràcticaUF3_2 {
      */
     public static void Escriure(PrintWriter pw, String dada) throws IOException {
         //Esrivim mitjançant pw.println
-        pw.println(dada);
+        pw.print(dada);
     }
 
     /**
@@ -363,20 +363,23 @@ public class PràcticaUF3_2 {
         String codi = DemanarCodi();
         //Mirem pel codi que el client no estigui ja en el fitxer. Si ho està, haurem de tornar a demanar el codi
         boolean validat = false;
-        int numero_linies = (int) buffer.lines().count();
         while (!validat) {
             boolean codi_trobat = false;
-            for (int i = 1; i <= numero_linies; i++) {
-                if (buffer.readLine().contains(codi)) {
+            String linia = buffer.readLine();
+            while (linia != null) {
+                if (linia.contains(codi)) {
                     codi_trobat = true;
                 }
-            }
+                linia = buffer.readLine();
+            }   
             if (!codi_trobat) {
                 validat = true;
-            } else {
+            } 
+            else {
                 codi = DemanarCodi();
             }
         }
+      
         //Tanquem el fitxer de lectura
         TancarFitxerLectura(buffer);
         
@@ -443,12 +446,12 @@ public class PràcticaUF3_2 {
         //Obrim el fitxer de lectura
         BufferedReader buffer = ObrirFitxerLectura(NOM_FITXER);
         //Recorrem les línies del fitxer per imprimir la que conté el codi
-        int numero_linies = (int) buffer.lines().count();
-        for (int i = 1; i <= numero_linies; i++) {
-            String linia = buffer.readLine();
+        String linia = buffer.readLine();
+        while (linia!=null) {
             if (linia.contains(codi)) {
                 System.out.println(linia);
             }
+            linia = buffer.readLine();
         }
         //Tanquem el fitxer de lectura
         TancarFitxerLectura(buffer);
@@ -456,31 +459,35 @@ public class PràcticaUF3_2 {
 
     /**
      * Funció que serveix per a comprovar si un codi existeix al fitxer 
-     * @param numero_linies numero de linies del fitxer 
      * @param codi codi inserit per primer cop a el lector
      * @return retorna el codi si es troba al fitxer en String
      * @throws IOException 
      */
-    public static String CodiTrobat(int numero_linies, String codi) throws IOException {
-        //Obrim el fitxer de lectura
-        BufferedReader buffer = ObrirFitxerLectura(NOM_FITXER);
+    public static String CodiTrobat(String codi) throws IOException {
+        
+        
         boolean validat = false;
         while (!validat) {
+            //Obrim el fitxer de lectura
+            BufferedReader buffer = ObrirFitxerLectura(NOM_FITXER);
             boolean codi_trobat = false;
-            for (int i = 1; i <= numero_linies; i++) {
-                if (buffer.readLine().contains(codi)) {
+            String linia = buffer.readLine();
+            while (linia != null) {
+                if (linia.contains(codi)) {
                     codi_trobat = true;
                 }
-            }
+                linia = buffer.readLine();
+            }  
+            //Tanquem el fitxer de lectura
+            TancarFitxerLectura(buffer);
             if (codi_trobat) {
                 validat = true;
-            } else {
+            } 
+            else {
                 codi = DemanarCodi();
             }
         }
-        //Tanquem el fitxer de lectura
-        TancarFitxerLectura(buffer);
-        
+
         //Retornem el codi
         return codi;
     }
@@ -498,8 +505,7 @@ public class PràcticaUF3_2 {
         //Creem un nou arxiu per reescriure tot, amb les modificacions
         PrintWriter pw_nou = ObrirFitxerEscriptura(NOM_FITXER_REEMPLAÇ, false);
         //Validem el codi perquè si no està en el fitxer no hi ha client per modificar
-        int numero_linies = (int) buffer.lines().count();
-        codi = CodiTrobat(numero_linies, codi);
+        codi = CodiTrobat(codi);
         System.out.println(""); //Deixem una línia de separació
         //Demanem les noves dades
         System.out.println("Insereix les noves dades del client");
@@ -507,13 +513,14 @@ public class PràcticaUF3_2 {
         String nova_linia = NovaLinia();
         /*Recorrem totes les línies per anar escrivint en el nou arxiu. Si la línia no és la modificada, l'escrivim tal qual. En canvi, si és la que conté
         el codi, escrivim la nova línia*/
-        for (int i = 1; i <= numero_linies; i++) {
-            String linia = buffer.readLine();
+        String linia = buffer.readLine();
+        while (linia!=null) {
             if (linia.contains(codi)) {
                 linia = linia.replaceAll(linia, nova_linia);
             }
             linia = linia + "\n";
             Escriure(pw_nou,linia);
+            linia = buffer.readLine();
         }
         //Tanquem
         TancarFitxerLectura(buffer);
@@ -521,7 +528,7 @@ public class PràcticaUF3_2 {
         
         //Reemplacem el fitxer inicial pel nou
         BorrarFitxer(NOM_FITXER);
-        RenombrarFitxer(NOM_FITXER,NOM_FITXER_REEMPLAÇ);
+        RenombrarFitxer(NOM_FITXER_REEMPLAÇ,NOM_FITXER);
         
         /*Path to = fitxer_clients.toPath();
         Path from = fitxer_clients_nou.toPath();
@@ -556,13 +563,16 @@ public class PràcticaUF3_2 {
         BufferedReader buffer = ObrirFitxerLectura(NOM_FITXER);
         //Creem un nou arxiu per reescriure tot, sense el client esborrat
         PrintWriter pw_nou = ObrirFitxerEscriptura(NOM_FITXER_REEMPLAÇ, false);
+        //Validem el codi perquè si no està en el fitxer no hi ha client per modificar
+        codi = CodiTrobat(codi);
         //Recorrem el fitxer antic per afegir totes les línies en el nou excepte la del client que volem esborrar
-        int numero_linies = (int) buffer.lines().count();
-        for (int i = 1; i <= numero_linies; i++) {
-            String linia = buffer.readLine();
+        String linia = buffer.readLine();
+        while (linia!=null) {
             if (!linia.contains(codi)) {
                 Escriure(pw_nou,linia);
+                Escriure(pw_nou,"\n");
             }
+            linia = buffer.readLine();
         }
         //Tanqem
         TancarFitxerLectura(buffer);
@@ -570,7 +580,7 @@ public class PràcticaUF3_2 {
         
         //Reemplacem el fitxer inicial pel nou
         BorrarFitxer(NOM_FITXER);
-        RenombrarFitxer(NOM_FITXER,NOM_FITXER_REEMPLAÇ);
+        RenombrarFitxer(NOM_FITXER_REEMPLAÇ,NOM_FITXER);
         
         /*Files.delete(fitxer_clients.toPath()); //No es borra perquè diu que l'arxiu està sent utilitzat per un altre procés
         //fitxer_clients_nou.renameTo(fitxer_clients);       */ 
@@ -590,5 +600,7 @@ public class PràcticaUF3_2 {
             System.out.println(linia);
             linia = buffer.readLine();
         }
+        //Tanqem
+        TancarFitxerLectura(buffer);
     }
 }
