@@ -45,6 +45,18 @@ public class Exercici2 {
     public static final int LONGITUD_COGNOMS = 30; //Longitud que ha de tindre el String de cognoms al fitxer
     public static final int LONGITUD_EMAIL = 30; //Longitud que ha de tindre el email en el fitxer
     public static final int NUMERO_DADES_LINIA = 7; //Número de dades del client que tenim en una línia
+    
+    /*Classe clients. Està tot en String perquè el codi prové de la pràctica anterior en què la funció d'escriure escriu ja el String.
+    La validació de la dada la fa abans*/
+    public static class Clients{
+        String Codi;
+        String Nom;
+        String Cognoms;
+        String DataNaixement;
+        String AdreçaPostal;
+        String eMail;
+        String VIP;
+    }
 
     //Creem un array de opcions del menú
     public static final String[] array_opcions = {"1)Alta d'un client", "2)Consulta d'un client per posició",
@@ -313,6 +325,15 @@ public class Exercici2 {
         //Retornem l'email
         return email;
     }
+    
+    public static String DemanarVIP() {
+        //Demanem el VIP mitjançant LlegirBoolean
+        boolean VIP = Utils.LlegirBoolean(scan, "Introdueix si el client és VIP: ");
+        String VIP_string = Boolean.toString(VIP);
+        
+        //Retornem el VIP
+        return VIP_string;
+    }
 
     /**
      * Funció que demana la posició del client en la llista
@@ -339,7 +360,7 @@ public class Exercici2 {
     }
     
     public static String LlegirLinia (DataInputStream dis){
-        String linia = null;
+        String linia;
         try {
             //Anem llegint les dades de la línia mitjançant el "dis"
             String codi = dis.readUTF();
@@ -348,10 +369,11 @@ public class Exercici2 {
             String data_naixement = dis.readUTF();
             String codi_postal = dis.readUTF();
             String email = dis.readUTF();
+            String VIP = dis.readUTF();
             String salt_linia = dis.readUTF();
-            linia = codi+nom+cognoms+data_naixement+codi_postal+email;
+            linia = codi+nom+cognoms+data_naixement+codi_postal+email+VIP;
         } catch (IOException ex) {
-            Logger.getLogger(Exercici2.class.getName()).log(Level.SEVERE, null, ex);
+            linia = null;
         }
         //Retornem la línia
         return linia;
@@ -376,8 +398,9 @@ public class Exercici2 {
      */
     public static void AltaClient() throws IOException {
         //Demanem cada dada del client i l'afegim a informacio_client
-        String codi = CodiNoTrobat();
-        EscriureClient(codi);
+        Clients client_nou = new Clients();
+        client_nou.Codi = CodiNoTrobat();
+        EscriureClient(client_nou);
 
     }
 
@@ -419,23 +442,25 @@ public class Exercici2 {
     /**
      * Procediment per a escriure un nou client
      *
-     * @param codi nou codi que utlitzara el client
+     * @param client_nou nou codi que s'afegeix al fitxer
      * @throws IOException
      */
-    public static void EscriureClient(String codi) throws IOException {
+    public static void EscriureClient(Clients client_nou) throws IOException {
         //Obrim el fitxer d'escriptura
         DataOutputStream dos = ObrirFitxerEscriptura(NOM_FITXER,true);
-        Escriure(dos,codi);
-        String nom = DemanarNom();
-        Escriure(dos,nom);
-        String cognoms = DemanarCognoms();
-        Escriure(dos,cognoms);
-        String data_naixement = DemanarDataNaixement();
-        Escriure(dos,data_naixement);
-        String adreça_postal = DemanarAdreçaPostal();
-        Escriure(dos,adreça_postal);
-        String email = DemanarEmail();
-        Escriure(dos,email);
+        Escriure(dos,client_nou.Codi);
+        client_nou.Nom = DemanarNom();
+        Escriure(dos,client_nou.Nom);
+        client_nou.Cognoms = DemanarCognoms();
+        Escriure(dos,client_nou.Cognoms);
+        client_nou.DataNaixement = DemanarDataNaixement();
+        Escriure(dos,client_nou.DataNaixement);
+        client_nou.AdreçaPostal = DemanarAdreçaPostal();
+        Escriure(dos,client_nou.AdreçaPostal);
+        client_nou.eMail = DemanarEmail();
+        Escriure(dos,client_nou.eMail);
+        client_nou.VIP = DemanarVIP();
+        Escriure(dos,client_nou.VIP);
         //Salt de línia
         Escriure(dos,"\n");
         
@@ -455,7 +480,7 @@ public class Exercici2 {
         //Recorrem les línies del fitxer per imprimir la línia del client que toca
         boolean acabat = false;
         for (int i = 1; !acabat; i++) {
-            String linia = dis.readLine();
+            String linia = LlegirLinia(dis);
             if (i == posicio) {
                 System.out.println(linia);
                 acabat = true;

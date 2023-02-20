@@ -14,7 +14,7 @@ import utils.Utils;
 
 /**
  *
- * @author rexru
+ * @author Biel Palomar i Franc Villalba
  */
 public class Exercici1 {
 

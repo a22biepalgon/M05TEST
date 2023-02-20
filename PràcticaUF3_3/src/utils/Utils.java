@@ -381,12 +381,11 @@ public class Utils {
     }
 
     /**
-     * Serveix per a demanr un numero amb el nostre escaner i un missatge
+     * Serveix per a demanar un numero amb el nostre escaner i un missatge
      *
      * @param scan Podem dir el nostre escaner
-     * @param missatge Podem dirt un missatge per a que imprimeixi abans de
-     * demanr el numero
-     * @return Retorna unn double introduit al teclat
+     * @param missatge Podem dir un missatge per a què imprimeixi abans de demanar el numero
+     * @return Retorna un double introduit al teclat
      */
     public static double LlegirDouble(Scanner scan, String missatge) {
         boolean dadesCorrectes;
@@ -398,6 +397,32 @@ public class Utils {
             dadesCorrectes = scan.hasNextDouble();
             if (dadesCorrectes) {
                 result = scan.nextDouble();
+                scan.nextLine();
+            } else if (scan.hasNext()) {
+                scan.nextLine();
+            }
+        } while (!dadesCorrectes);
+
+        return result;
+    }
+    
+    /**
+     * Serveix per a demanar un booleà amb el nostre escaner i un missatge
+     * 
+     * @param scan Podem dir el nostre escaner
+     * @param missatge Podem dir un missatge per a què imprimeixi abans de demanar el numero
+     * @return Retorna un booleà introduit al teclat
+     */
+    public static boolean LlegirBoolean(Scanner scan, String missatge) {
+        boolean dadesCorrectes;
+        boolean result = false;
+        do {
+            if (missatge != null) {
+                System.out.print(missatge);
+            }
+            dadesCorrectes = scan.hasNextBoolean();
+            if (dadesCorrectes) {
+                result = scan.nextBoolean();
                 scan.nextLine();
             } else if (scan.hasNext()) {
                 scan.nextLine();
