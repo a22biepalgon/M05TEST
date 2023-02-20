@@ -23,7 +23,7 @@ public class Exercici1 {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-        DataOutputStream fEscr = ObrirFitxerEscriptura("prova.dat", true);
+        DataOutputStream fEscr = ObrirFitxerEscriptura("numeros.dat", true);
         int num_escriure = Utils.LlegirInt();
         while (num_escriure != 0) {
             Escriure(fEscr, num_escriure);
