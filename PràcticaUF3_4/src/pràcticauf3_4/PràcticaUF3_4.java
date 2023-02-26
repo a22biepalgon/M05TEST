@@ -42,7 +42,7 @@ public class PràcticaUF3_4 {
     public static final int LONGITUD_NOM = 20; //Longitud que ha de tindre el nom en el fitxer
     public static final int LONGITUD_COGNOMS = 30; //Longitud que ha de tindre el String de cognoms al fitxer
     public static final int LONGITUD_EMAIL = 30; //Longitud que ha de tindre el email en el fitxer
-    public static final int NUMERO_DADES_LINIA = 8; //Número de dades del client que tenim en una línia
+    public static final int NUMERO_DADES_LINIA = 16; //Número de dades del client que tenim en una línia
 
     /*Classe clients. Està tot en String perquè el codi prové de la pràctica anterior en què la funció d'escriure escriu ja el String.
     La validació de la dada la fa abans*/
@@ -417,7 +417,7 @@ public class PràcticaUF3_4 {
      */
     public static void AltaClient() throws IOException {
         File f = new File(NOM_FITXER);
-        if (!f.exists()){
+        if (!f.exists()) {
             f.createNewFile();
         }
         //Demanem cada dada del client i l'afegim a informacio_client
@@ -472,6 +472,7 @@ public class PràcticaUF3_4 {
         //Obrim el fitxer d'escriptura
         DataOutputStream dos = ObrirFitxerEscriptura(f, true);
         EscriureIndexClientPosicio(f.length());
+        EscriureIndexClientPosicio(1);
         Escriure(dos, client_nou.Codi);
         client_nou.Nom = DemanarNom();
         Escriure(dos, client_nou.Nom);
@@ -495,9 +496,9 @@ public class PràcticaUF3_4 {
     public static int StringaInt(String codi_String) {
         int resultat = 0;
         String resultatS = "";
-        for (int i = 0; i < codi_String.length() -1; i++){
-            if (!codi_String.substring(i, i+1).contains(" ")){
-                resultatS = codi_String.substring(i, i+1);
+        for (int i = 0; i < codi_String.length() - 1; i++) {
+            if (!codi_String.substring(i, i + 1).contains(" ")) {
+                resultatS = codi_String.substring(i, i + 1);
             }
         }
         resultat = Integer.parseInt(resultatS);
@@ -511,17 +512,40 @@ public class PràcticaUF3_4 {
      * @throws IOException
      */
     public static void ConsultaPerPosicio(int posicio) throws IOException {
+
         long posicio_index = (posicio - 1) * NUMERO_DADES_LINIA;
         RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_INDEX, "r");
         raf.seek(posicio_index);
         long posicion_datos = raf.readLong();
         raf.close();
+        boolean valid = ComprobarBorrado(posicio_index);
 
-        RandomAccessFile rafClient = new RandomAccessFile(NOM_FITXER, "r");
-        rafClient.seek(posicion_datos);
-        String linia = LlegirLinia(rafClient);
-        System.out.println(linia);
-        rafClient.close();
+        if (valid) {
+
+            RandomAccessFile rafClient = new RandomAccessFile(NOM_FITXER, "r");
+            rafClient.seek(posicion_datos);
+            String linia = LlegirLinia(rafClient);
+            System.out.println(linia);
+            rafClient.close();
+        }
+    }
+
+    public static boolean ComprobarBorrado(long posicio_index) {
+        boolean resultat = false;
+        try {
+            posicio_index += 8;
+            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_INDEX, "r");
+            raf.seek(posicio_index);
+            if (raf.readLong() == 1) {
+                resultat = true;
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return resultat;
     }
 
     /**
@@ -534,15 +558,39 @@ public class PràcticaUF3_4 {
         //Obrim el fitxer de lectura
         RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
         //Recorrem les línies del fitxer per imprimir la que conté el codi
-        String linia = LlegirLinia(raf);
-        while (linia != null) {
-            if (linia.contains(codi)) {
-                System.out.println(linia);
+
+        int count = 0;
+        boolean valid1 = false;
+        while (!valid1) {
+            String mirarcodi = LlegirLinia(raf);
+            count++;
+
+            if (mirarcodi.contains(codi)) {
+                int posicio_index = (count - 1) * NUMERO_DADES_LINIA;
+                valid1 = ComprobarBorrado(posicio_index);
             }
-            linia = LlegirLinia(raf);
+
+        }
+        TancarFitxerLectura(raf);
+        int posicio_index = (count - 1) * NUMERO_DADES_LINIA;
+        boolean valid = ComprobarBorrado(posicio_index);
+        RandomAccessFile raf2 = new RandomAccessFile(NOM_FITXER, "r");
+        if (valid) {
+            String linia = LlegirLinia(raf2);
+            int contador = 0;
+            while (linia != null) {
+                contador++;
+
+                if (ComprobarBorrado((contador - 1) * NUMERO_DADES_LINIA)) {
+                    if (linia.contains(codi)) {
+                        System.out.println(linia);
+                    }
+                }
+                linia = LlegirLinia(raf2);
+            }
         }
         //Tanquem el fitxer de lectura
-        TancarFitxerLectura(raf);
+        TancarFitxerLectura(raf2);
     }
 
     /**
@@ -558,7 +606,6 @@ public class PràcticaUF3_4 {
         while (!validat) {
             //Obrim el fitxer de lectura
             RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
-            DataInputStream dis = ObrirFitxerLectura(NOM_FITXER);
             boolean codi_trobat = false;
             String linia = LlegirLinia(raf);
             while (linia != null) {
@@ -568,7 +615,6 @@ public class PràcticaUF3_4 {
                 linia = LlegirLinia(raf);
             }
             //Tanquem el fitxer de lectura
-            TancarFitxerLectura(dis);
             if (codi_trobat) {
                 validat = true;
             } else {
@@ -589,35 +635,14 @@ public class PràcticaUF3_4 {
      */
     public static void ModificarClient(String codi) throws IOException {
         //Obrim el fitxer de lectura
-        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
-        //Creem un nou arxiu per reescriure tot, amb les modificacions
-        File f = new File(NOM_FITXER_REEMPLAÇ);
-        DataOutputStream dos_nou = ObrirFitxerEscriptura(f, false);
+        File f = new File(NOM_FITXER);
         //Validem el codi perquè si no està en el fitxer no hi ha client per modificar
-        codi = CodiTrobat(codi);
-        System.out.println(""); //Deixem una línia de separació
-        //Demanem les noves dades
-        System.out.println("Insereix les noves dades del client");
-        //Creem la nova línia juntant totes les dades
-        String nova_linia = NovaLinia();
-        /*Recorrem totes les línies per anar escrivint en el nou arxiu. Si la línia no és la modificada, l'escrivim tal qual. En canvi, si és la que conté
-        el codi, escrivim la nova línia*/
-        String linia = LlegirLinia(raf);
-        while (linia != null) {
-            if (linia.contains(codi)) {
-                linia = linia.replaceAll(linia, nova_linia);
-            }
-            linia = linia + "\n";
-            Escriure(dos_nou, linia);
-            linia = LlegirLinia(raf);
-        }
-        //Tanquem
-        TancarFitxerLectura(raf);
-        TancarFitxerEscriptura(dos_nou);
+        Clients client_nou = new Clients();
+        client_nou.Codi = CodiTrobat(codi);
 
-        //Reemplacem el fitxer inicial pel nou
-        BorrarFitxer(NOM_FITXER);
-        RenombrarFitxer(NOM_FITXER_REEMPLAÇ, NOM_FITXER);
+        EsborrarClient(codi);
+        EscriureClient(client_nou, f);
+        //Tanquem
 
     }
 
@@ -646,27 +671,21 @@ public class PràcticaUF3_4 {
     public static void EsborrarClient(String codi) throws FileNotFoundException, IOException {
         //Creem un nou arxiu per reescriure tot, sense el client esborrat
         RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
-        File f = new File(NOM_FITXER_REEMPLAÇ);
-        DataOutputStream dos_nou = ObrirFitxerEscriptura(f, false);
-        //Validem el codi perquè si no està en el fitxer no hi ha client per modificar
-        codi = CodiTrobat(codi);
-        //Recorrem el fitxer antic per afegir totes les línies en el nou excepte la del client que volem esborrar
-        String linia = LlegirLinia(raf);
-        while (linia != null) {
-            if (!linia.contains(codi)) {
-                Escriure(dos_nou, linia);
-                Escriure(dos_nou, "\n");
-            }
-            linia = LlegirLinia(raf);
+        RandomAccessFile raf2 = new RandomAccessFile(NOM_FITXER_INDEX, "rw");
+
+        String mirarcodi = LlegirLinia(raf);
+        int count = 1;
+        while (!mirarcodi.contains(codi)) {
+            mirarcodi = LlegirLinia(raf);
+            count++;
         }
+        int numindex = (count - 1) * 16 + 8;
+        raf2.seek(numindex);
+        raf2.writeLong(0);
+
         //Tanqem
         TancarFitxerLectura(raf);
-        TancarFitxerEscriptura(dos_nou);
-
-        //Reemplacem el fitxer inicial pel nou
-        BorrarFitxer(NOM_FITXER);
-        RenombrarFitxer(NOM_FITXER_REEMPLAÇ, NOM_FITXER);
-
+        TancarFitxerLectura(raf2);
     }
 
     /**
@@ -676,15 +695,75 @@ public class PràcticaUF3_4 {
      */
     public static void LlistatClients() throws IOException {
         //Obrim el fitxer de lectura
-        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
 
         //Imprimim les línies
-        String linia = LlegirLinia(raf);
-        while (linia != null) {
-            System.out.println(linia);
-            linia = LlegirLinia(raf);
+        int[] indexos = IndexArray();
+
+        Utils.BubbleSort(indexos);
+        for (int i = 0; i < indexos.length; i++) {
+            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
+            String linia = LlegirLinia(raf);
+
+            while (linia != null) {
+                String numero = "" + indexos[i];
+                int posicio_index = (indexos[i] -1) * 16;
+                if (linia.contains(numero) && ComprobarBorrado(posicio_index)) {
+                    System.out.println(linia);
+                }
+                linia = LlegirLinia(raf);
+            }
+            TancarFitxerLectura(raf);
+
         }
         //Tanqem
+    }
+
+    public static int[] IndexArray() throws FileNotFoundException, IOException {
+
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
+        String linia = LlegirLinia(raf);
+        int contador = 0;
+        while (linia != null) {
+            linia = LlegirLinia(raf);
+            contador++;
+        }
         TancarFitxerLectura(raf);
+        int[] resultat = new int[contador];
+        RandomAccessFile raf2 = new RandomAccessFile(NOM_FITXER, "r");
+        for (int i = 0; i < resultat.length; i++) {
+            resultat[i] = NomesCodi(raf2);
+        }
+        TancarFitxerLectura(raf2);
+
+        return resultat;
+    }
+
+    public static int NomesCodi(RandomAccessFile raf) throws IOException {
+
+        int resultat = 0;
+        //Anem llegint les dades de la línia mitjançant el "raf"
+        String codi = raf.readUTF();
+        String nom = raf.readUTF();
+        String cognoms = raf.readUTF();
+        String data_naixement = raf.readUTF();
+        String codi_postal = raf.readUTF();
+        String email = raf.readUTF();
+        String VIP = raf.readUTF();
+        String salt_linia = raf.readUTF();
+
+        resultat = Integer.parseInt(TreureEspais(codi));
+
+        return resultat;
+
+    }
+
+    public static String TreureEspais(String paraula) {
+        String resultat = "";
+        for (int i = 0; i < paraula.length() - 1; i++) {
+            if (!paraula.substring(i, i + 1).contains(" ")) {
+                resultat += paraula.substring(i, i + 1);
+            }
+        }
+        return resultat;
     }
 }
