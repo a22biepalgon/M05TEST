@@ -27,7 +27,8 @@ public class PràcticaUF3_4 {
 
     //CONSTANTS
     public static final String NOM_FITXER = "./fitxer_clients.bin";
-    public static final String NOM_FITXER_REEMPLAÇ = "./fitxer_clients_nou.bin"; /*Nom del fitxer de clients momentani que creem quan volem
+    public static final String NOM_FITXER_REEMPLAÇ = "./fitxer_clients_nou.bin";
+    /*Nom del fitxer de clients momentani que creem quan volem
     modificar el fitxer original*/
     public static final String NOM_FITXER_INDEX = "./fitxer_clients.idx_pos";
     public static final int OPCIO_1 = 1; //Opció 1 del Menú
@@ -41,11 +42,12 @@ public class PràcticaUF3_4 {
     public static final int LONGITUD_NOM = 20; //Longitud que ha de tindre el nom en el fitxer
     public static final int LONGITUD_COGNOMS = 30; //Longitud que ha de tindre el String de cognoms al fitxer
     public static final int LONGITUD_EMAIL = 30; //Longitud que ha de tindre el email en el fitxer
-    public static final int NUMERO_DADES_LINIA = 7; //Número de dades del client que tenim en una línia
-    
+    public static final int NUMERO_DADES_LINIA = 8; //Número de dades del client que tenim en una línia
+
     /*Classe clients. Està tot en String perquè el codi prové de la pràctica anterior en què la funció d'escriure escriu ja el String.
     La validació de la dada la fa abans*/
-    public static class Clients{
+    public static class Clients {
+
         String Codi;
         String Nom;
         String Cognoms;
@@ -71,19 +73,20 @@ public class PràcticaUF3_4 {
         int opcio_escollida = Utils.Menu(scan, array_opcions);
         System.out.println(""); //Deixem una línia de separació
         Programa(opcio_escollida);
-        
+
         //Tanquem l'escaner
         scan.close();
     }
 
     /**
      * Procediment que executa les opcions escollides del menu
+     *
      * @param opcio_escollida Opció escollida del menú
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     public static void Programa(int opcio_escollida) throws FileNotFoundException, IOException {
-        
+
         //Mentre l'opció escollida no sigui sortir
         while (opcio_escollida != array_opcions.length) {
             switch (opcio_escollida) {
@@ -125,26 +128,24 @@ public class PràcticaUF3_4 {
             System.out.println(""); //Deixem una línia de separació
         }
     }
-    
-    public static File ObrirFitxer (String nom_fitxer){
-        
+
+    public static File ObrirFitxer(String nom_fitxer) {
 
         File result = new File(nom_fitxer);
 
         if (!result.exists()) {
-                try {
-                    result.createNewFile();
-                } catch (IOException ex) {
-                    Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
-                    result = null;
-                }
-            } 
-        
+            try {
+                result.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
+                result = null;
+            }
+        }
 
         return result;
     }
-    
-    public static DataInputStream ObrirFitxerLectura (String nom_fitxer) {
+
+    public static DataInputStream ObrirFitxerLectura(String nom_fitxer) {
         DataInputStream dis = null;
         File f = ObrirFitxer(nom_fitxer);
 
@@ -162,8 +163,8 @@ public class PràcticaUF3_4 {
 
         return dis;
     }
-    
-    public static DataOutputStream ObrirFitxerEscriptura (File f, boolean afegir) {
+
+    public static DataOutputStream ObrirFitxerEscriptura(File f, boolean afegir) {
         DataOutputStream dos = null;
 
         if (f != null) {
@@ -180,34 +181,43 @@ public class PràcticaUF3_4 {
 
         return dos;
     }
-    
-    public static void TancarFitxerLectura (DataInputStream dis) {
+
+    public static void TancarFitxerLectura(DataInputStream dis) {
         try {
             dis.close();
         } catch (IOException ex) {
             Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } 
-    
-    public static void TancarFitxerEscriptura (DataOutputStream dos) {
+    }
+
+    public static void TancarFitxerLectura(RandomAccessFile raf) {
+        try {
+            raf.close();
+        } catch (IOException ex) {
+            Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void TancarFitxerEscriptura(DataOutputStream dos) {
         try {
             dos.flush();
             dos.close();
         } catch (IOException ex) {
             Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }  
-    
-    public static void BorrarFitxer (String nom_fitxer){
-        File f = new File(nom_fitxer);
-        f.delete();       
     }
-    
-    public static void RenombrarFitxer (String nom_fitxer_inici, String nom_fitxer_final){
+
+    public static void BorrarFitxer(String nom_fitxer) {
+        File f = new File(nom_fitxer);
+        f.delete();
+    }
+
+    public static void RenombrarFitxer(String nom_fitxer_inici, String nom_fitxer_final) {
         File f = new File(nom_fitxer_inici);
         File f2 = new File(nom_fitxer_final);
         f.renameTo(f2);
     }
+
     /**
      * Funció que demana el codi del client
      *
@@ -321,12 +331,12 @@ public class PràcticaUF3_4 {
         //Retornem l'email
         return email;
     }
-    
+
     public static String DemanarVIP() {
         //Demanem el VIP mitjançant LlegirBoolean
         boolean VIP = Utils.LlegirBoolean(scan, "Introdueix si el client és VIP: ");
         String VIP_string = Boolean.toString(VIP);
-        
+
         //Retornem el VIP
         return VIP_string;
     }
@@ -341,12 +351,12 @@ public class PràcticaUF3_4 {
         //Obrim el fitxer de clients
         File f = ObrirFitxer(NOM_FITXER);
         //Demanem la posició mitjançant LlegirInt posant com a tope el número de línies
-        int posicio = Utils.LlegirInt(scan, "Introdueix la posicio: ", 1, (int)f.length());
+        int posicio = Utils.LlegirInt(scan, "Introdueix la posicio: ", 1, (int) f.length());
         //Retornem la posició
         return posicio;
     }
-    
-    public static String LlegirLinia (RandomAccessFile raf){
+
+    public static String LlegirLinia(RandomAccessFile raf) {
         String linia;
         try {
             //Anem llegint les dades de la línia mitjançant el "dis"
@@ -358,19 +368,18 @@ public class PràcticaUF3_4 {
             String email = raf.readUTF();
             String VIP = raf.readUTF();
             String salt_linia = raf.readUTF();
-            linia = codi+nom+cognoms+data_naixement+codi_postal+email+VIP;
+            linia = codi + nom + cognoms + data_naixement + codi_postal + email + VIP;
         } catch (IOException ex) {
             linia = null;
         }
         //Retornem la línia
         return linia;
     }
-    
-    public static DataOutputStream EscriureIndexClientPosicio(long posicio)
-    {
+
+    public static DataOutputStream EscriureIndexClientPosicio(long posicio) {
         File f = ObrirFitxer(NOM_FITXER_INDEX);
-        DataOutputStream dos = ObrirFitxerEscriptura(f,true);
-        
+        DataOutputStream dos = ObrirFitxerEscriptura(f, true);
+
         try {
             dos.writeLong(posicio);
         } catch (IOException ex) {
@@ -378,16 +387,14 @@ public class PràcticaUF3_4 {
         }
         return dos;
     }
-    
-    public static void EscriureIndexClientCodi(DataOutputStream dos, int codi)
-    {
-        
+
+    public static void EscriureIndexClientCodi(DataOutputStream dos, int codi) {
         try {
             dos.writeLong(codi);
         } catch (IOException ex) {
             Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         TancarFitxerEscriptura(dos);
     }
 
@@ -410,20 +417,25 @@ public class PràcticaUF3_4 {
      */
     public static void AltaClient() throws IOException {
         File f = new File(NOM_FITXER);
+        if (!f.exists()){
+            f.createNewFile();
+        }
         //Demanem cada dada del client i l'afegim a informacio_client
         Clients client_nou = new Clients();
         client_nou.Codi = CodiNoTrobat();
-        EscriureClient(client_nou);     
+        EscriureClient(client_nou, f);
     }
 
     /**
-     * Funcio que retorna el numero de codi si aquest no existeix al fitxer actual
+     * Funcio que retorna el numero de codi si aquest no existeix al fitxer
+     * actual
+     *
      * @return etorna el numero de codi en string
-     * @throws IOException 
+     * @throws IOException
      */
     public static String CodiNoTrobat() throws IOException {
         //Obrim el fitxer de lectura
-        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER,"r");
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
         String codi = DemanarCodi();
         //Mirem pel codi que el client no estigui ja en el fitxer. Si ho està, haurem de tornar a demanar el codi
         boolean validat = false;
@@ -435,18 +447,17 @@ public class PràcticaUF3_4 {
                     codi_trobat = true;
                 }
                 linia = LlegirLinia(raf);
-            }   
+            }
             if (!codi_trobat) {
                 validat = true;
-            } 
-            else {
+            } else {
                 codi = DemanarCodi();
             }
         }
-      
+
         //Tanquem el fitxer de lectura
         raf.close();
-        
+
         //Retornem el codi
         return codi;
     }
@@ -457,30 +468,40 @@ public class PràcticaUF3_4 {
      * @param client_nou nou codi que s'afegeix al fitxer
      * @throws IOException
      */
-    public static void EscriureClient(Clients client_nou) throws IOException {
+    public static void EscriureClient(Clients client_nou, File f) throws IOException {
         //Obrim el fitxer d'escriptura
-        File f = ObrirFitxer(NOM_FITXER);
-        DataOutputStream dos = ObrirFitxerEscriptura(f,true);
-        DataOutputStream dos_index = EscriureIndexClientPosicio(f.length());
-        EscriureIndexClientCodi(dos_index,Integer.parseInt(client_nou.Codi));
-        Escriure(dos,client_nou.Codi);
+        DataOutputStream dos = ObrirFitxerEscriptura(f, true);
+        EscriureIndexClientPosicio(f.length());
+        Escriure(dos, client_nou.Codi);
         client_nou.Nom = DemanarNom();
-        Escriure(dos,client_nou.Nom);
+        Escriure(dos, client_nou.Nom);
         client_nou.Cognoms = DemanarCognoms();
-        Escriure(dos,client_nou.Cognoms);
+        Escriure(dos, client_nou.Cognoms);
         client_nou.DataNaixement = DemanarDataNaixement();
-        Escriure(dos,client_nou.DataNaixement);
+        Escriure(dos, client_nou.DataNaixement);
         client_nou.AdreçaPostal = DemanarAdreçaPostal();
-        Escriure(dos,client_nou.AdreçaPostal);
+        Escriure(dos, client_nou.AdreçaPostal);
         client_nou.eMail = DemanarEmail();
-        Escriure(dos,client_nou.eMail);
+        Escriure(dos, client_nou.eMail);
         client_nou.VIP = DemanarVIP();
-        Escriure(dos,client_nou.VIP);
+        Escriure(dos, client_nou.VIP);
         //Salt de línia
-        Escriure(dos,"\n");
-        
+        Escriure(dos, "\n");
+
         //Tanquem el fitxer d'escriptura
         TancarFitxerEscriptura(dos);
+    }
+
+    public static int StringaInt(String codi_String) {
+        int resultat = 0;
+        String resultatS = "";
+        for (int i = 0; i < codi_String.length() -1; i++){
+            if (!codi_String.substring(i, i+1).contains(" ")){
+                resultatS = codi_String.substring(i, i+1);
+            }
+        }
+        resultat = Integer.parseInt(resultatS);
+        return resultat;
     }
 
     /**
@@ -511,46 +532,46 @@ public class PràcticaUF3_4 {
      */
     public static void ConsultaPerCodi(String codi) throws IOException {
         //Obrim el fitxer de lectura
-        DataInputStream dis = ObrirFitxerLectura(NOM_FITXER);
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
         //Recorrem les línies del fitxer per imprimir la que conté el codi
-        String linia = LlegirLinia(dis);
-        while (linia!=null) {
+        String linia = LlegirLinia(raf);
+        while (linia != null) {
             if (linia.contains(codi)) {
                 System.out.println(linia);
             }
-            linia = LlegirLinia(dis);
+            linia = LlegirLinia(raf);
         }
         //Tanquem el fitxer de lectura
-        TancarFitxerLectura(dis);
+        TancarFitxerLectura(raf);
     }
 
     /**
-     * Funció que serveix per a comprovar si un codi existeix al fitxer 
+     * Funció que serveix per a comprovar si un codi existeix al fitxer
+     *
      * @param codi codi inserit per primer cop a el lector
      * @return retorna el codi si es troba al fitxer en String
-     * @throws IOException 
+     * @throws IOException
      */
     public static String CodiTrobat(String codi) throws IOException {
-        
-        
+
         boolean validat = false;
         while (!validat) {
             //Obrim el fitxer de lectura
+            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
             DataInputStream dis = ObrirFitxerLectura(NOM_FITXER);
             boolean codi_trobat = false;
-            String linia = LlegirLinia(dis);
+            String linia = LlegirLinia(raf);
             while (linia != null) {
                 if (linia.contains(codi)) {
                     codi_trobat = true;
                 }
-                linia = LlegirLinia(dis);
-            }  
+                linia = LlegirLinia(raf);
+            }
             //Tanquem el fitxer de lectura
             TancarFitxerLectura(dis);
             if (codi_trobat) {
                 validat = true;
-            } 
-            else {
+            } else {
                 codi = DemanarCodi();
             }
         }
@@ -568,9 +589,10 @@ public class PràcticaUF3_4 {
      */
     public static void ModificarClient(String codi) throws IOException {
         //Obrim el fitxer de lectura
-        DataInputStream dis = ObrirFitxerLectura(NOM_FITXER);
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
         //Creem un nou arxiu per reescriure tot, amb les modificacions
-        DataOutputStream dos_nou = ObrirFitxerEscriptura(NOM_FITXER_REEMPLAÇ, false);
+        File f = new File(NOM_FITXER_REEMPLAÇ);
+        DataOutputStream dos_nou = ObrirFitxerEscriptura(f, false);
         //Validem el codi perquè si no està en el fitxer no hi ha client per modificar
         codi = CodiTrobat(codi);
         System.out.println(""); //Deixem una línia de separació
@@ -580,26 +602,26 @@ public class PràcticaUF3_4 {
         String nova_linia = NovaLinia();
         /*Recorrem totes les línies per anar escrivint en el nou arxiu. Si la línia no és la modificada, l'escrivim tal qual. En canvi, si és la que conté
         el codi, escrivim la nova línia*/
-        String linia = LlegirLinia(dis);
-        while (linia!=null) {
+        String linia = LlegirLinia(raf);
+        while (linia != null) {
             if (linia.contains(codi)) {
                 linia = linia.replaceAll(linia, nova_linia);
             }
             linia = linia + "\n";
-            Escriure(dos_nou,linia);
-            linia = LlegirLinia(dis);
+            Escriure(dos_nou, linia);
+            linia = LlegirLinia(raf);
         }
         //Tanquem
-        TancarFitxerLectura(dis);
+        TancarFitxerLectura(raf);
         TancarFitxerEscriptura(dos_nou);
-        
+
         //Reemplacem el fitxer inicial pel nou
         BorrarFitxer(NOM_FITXER);
-        RenombrarFitxer(NOM_FITXER_REEMPLAÇ,NOM_FITXER);
-       
+        RenombrarFitxer(NOM_FITXER_REEMPLAÇ, NOM_FITXER);
+
     }
 
-    public static String NovaLinia(){
+    public static String NovaLinia() {
         String resultat = "";
         String codi_nou = DemanarCodi();
         String nom = DemanarNom();
@@ -607,11 +629,12 @@ public class PràcticaUF3_4 {
         String data_naixement = DemanarDataNaixement();
         String adreça_postal = DemanarAdreçaPostal();
         String email = DemanarEmail();
-        
+
         resultat = codi_nou + nom + cognoms + data_naixement + adreça_postal + email;
-        
+
         return resultat;
     }
+
     /**
      * Procediment que esborra un client un cop se li dona el codi d'aquest
      *
@@ -621,29 +644,29 @@ public class PràcticaUF3_4 {
      * @throws IOException
      */
     public static void EsborrarClient(String codi) throws FileNotFoundException, IOException {
-        //Obrim el fitxer de lectura
-        DataInputStream dis = ObrirFitxerLectura(NOM_FITXER);
         //Creem un nou arxiu per reescriure tot, sense el client esborrat
-        DataOutputStream dos_nou = ObrirFitxerEscriptura(NOM_FITXER_REEMPLAÇ, false);
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
+        File f = new File(NOM_FITXER_REEMPLAÇ);
+        DataOutputStream dos_nou = ObrirFitxerEscriptura(f, false);
         //Validem el codi perquè si no està en el fitxer no hi ha client per modificar
         codi = CodiTrobat(codi);
         //Recorrem el fitxer antic per afegir totes les línies en el nou excepte la del client que volem esborrar
-        String linia = LlegirLinia(dis);
-        while (linia!=null) {
+        String linia = LlegirLinia(raf);
+        while (linia != null) {
             if (!linia.contains(codi)) {
-                Escriure(dos_nou,linia);
-                Escriure(dos_nou,"\n");
+                Escriure(dos_nou, linia);
+                Escriure(dos_nou, "\n");
             }
-            linia = LlegirLinia(dis);
+            linia = LlegirLinia(raf);
         }
         //Tanqem
-        TancarFitxerLectura(dis);
+        TancarFitxerLectura(raf);
         TancarFitxerEscriptura(dos_nou);
-        
+
         //Reemplacem el fitxer inicial pel nou
         BorrarFitxer(NOM_FITXER);
-        RenombrarFitxer(NOM_FITXER_REEMPLAÇ,NOM_FITXER);
-        
+        RenombrarFitxer(NOM_FITXER_REEMPLAÇ, NOM_FITXER);
+
     }
 
     /**
@@ -653,16 +676,15 @@ public class PràcticaUF3_4 {
      */
     public static void LlistatClients() throws IOException {
         //Obrim el fitxer de lectura
-        DataInputStream dis = ObrirFitxerLectura(NOM_FITXER);
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
+
         //Imprimim les línies
-        String linia = LlegirLinia(dis);
-        while (linia!=null) {
+        String linia = LlegirLinia(raf);
+        while (linia != null) {
             System.out.println(linia);
-            linia = LlegirLinia(dis);
+            linia = LlegirLinia(raf);
         }
         //Tanqem
-        TancarFitxerLectura(dis);
+        TancarFitxerLectura(raf);
     }
 }
-
-
