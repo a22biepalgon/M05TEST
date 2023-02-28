@@ -26,8 +26,8 @@ public class PràcticaUF3_4 {
     public static Scanner scan = new Scanner(System.in);
 
     //CONSTANTS
-    public static final String NOM_FITXER = "./fitxer_clients.bin";
-    public static final String NOM_FITXER_REEMPLAÇ = "./fitxer_clients_nou.bin";
+    public static final String NOM_FITXER_DADES = "./fitxer_clients.bin";
+    public static final String NOM_FITXER_DADES_REEMPLAÇ = "./fitxer_clients_nou.bin";
     /*Nom del fitxer de clients momentani que creem quan volem
     modificar el fitxer original*/
     public static final String NOM_FITXER_INDEX = "./fitxer_clients.idx_pos";
@@ -42,13 +42,14 @@ public class PràcticaUF3_4 {
     public static final int LONGITUD_NOM = 20; //Longitud que ha de tindre el nom en el fitxer
     public static final int LONGITUD_COGNOMS = 30; //Longitud que ha de tindre el String de cognoms al fitxer
     public static final int LONGITUD_EMAIL = 30; //Longitud que ha de tindre el email en el fitxer
-    public static final int NUMERO_DADES_LINIA = 16; //Número de dades del client que tenim en una línia
+    public static final int TAMANY_REGISTRE_INDEX = 8+4+4; //Tamany en bits d'un registre a líndex: long+int
+    
 
     /*Classe clients. Està tot en String perquè el codi prové de la pràctica anterior en què la funció d'escriure escriu ja el String.
     La validació de la dada la fa abans*/
     public static class Clients {
 
-        String Codi;
+        int Codi;
         String Nom;
         String Cognoms;
         String DataNaixement;
@@ -102,13 +103,13 @@ public class PràcticaUF3_4 {
                 case OPCIO_3: {
                     //Demanem el codi del client que es vol consultar
                     String codi = DemanarCodi();
-                    ConsultaPerCodi(codi);
+                    ConsultaPerCodi(codi.trim());
                     break;
                 }
                 case OPCIO_4: {
                     //Demanem el codi del client que es vol modificar
                     String codi = DemanarCodi();
-                    ModificarClient(codi);
+                    ModificarClient(codi.trim());
                     break;
                 }
                 case OPCIO_5: {
@@ -216,6 +217,19 @@ public class PràcticaUF3_4 {
         File f = new File(nom_fitxer_inici);
         File f2 = new File(nom_fitxer_final);
         f.renameTo(f2);
+    }
+    
+    public static int ComptarRegistres (){
+        DataInputStream dis = ObrirFitxerLectura(NOM_FITXER_INDEX);
+        String borrat_string = LlegirBorrat(dis);
+        int count = 0;
+        while (borrat_string!=null){
+            if (Integer.parseInt(borrat_string)==1){
+                count++;
+            }
+            borrat_string = LlegirBorrat(dis);
+        }
+        return count;
     }
 
     /**
@@ -349,14 +363,15 @@ public class PràcticaUF3_4 {
      */
     public static int DemanarPosicio() throws IOException {
         //Obrim el fitxer de clients
-        File f = ObrirFitxer(NOM_FITXER);
+        File f = ObrirFitxer(NOM_FITXER_DADES);
         //Demanem la posició mitjançant LlegirInt posant com a tope el número de línies
-        int posicio = Utils.LlegirInt(scan, "Introdueix la posicio: ", 1, (int) f.length());
+        int numero_registres = ComptarRegistres();
+        int posicio = Utils.LlegirInt(scan, "Introdueix la posicio: ", 1, numero_registres);
         //Retornem la posició
         return posicio;
     }
 
-    public static String LlegirLinia(RandomAccessFile raf) {
+    public static String LlegirLiniaDades(RandomAccessFile raf) {
         String linia;
         try {
             //Anem llegint les dades de la línia mitjançant el "dis"
@@ -375,6 +390,36 @@ public class PràcticaUF3_4 {
         //Retornem la línia
         return linia;
     }
+    
+    public static String LlegirLiniaIndex(RandomAccessFile raf) {
+        String linia;
+        try {
+            //Anem llegint les dades de la línia mitjançant el "dis"
+            long posicio = raf.readLong();
+            int codi = raf.readInt();
+            int borrat = raf.readInt();
+            linia = Integer.toString(codi);
+        } catch (IOException ex) {
+            linia = null;
+        }
+        //Retornem la línia
+        return linia;
+    }
+    
+    public static String LlegirBorrat(DataInputStream dis) {
+        String borrat;
+        try {
+            //Anem llegint les dades de la línia mitjançant el "dis"
+            long posicio = dis.readLong();
+            int codi = dis.readInt();
+            borrat = Integer.toString(dis.readInt());
+         
+        } catch (IOException ex) {
+            borrat = null;
+        }
+        //Retornem la línia
+        return borrat;
+    }
 
     public static DataOutputStream EscriureIndexClientPosicio(long posicio) {
         File f = ObrirFitxer(NOM_FITXER_INDEX);
@@ -390,7 +435,16 @@ public class PràcticaUF3_4 {
 
     public static void EscriureIndexClientCodi(DataOutputStream dos, int codi) {
         try {
-            dos.writeLong(codi);
+            dos.writeInt(codi);
+        } catch (IOException ex) {
+            Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    public static void EscriureIndexClientMarcaBorrat(DataOutputStream dos, int marca_borrat) {
+        try {
+            dos.writeInt(marca_borrat);
         } catch (IOException ex) {
             Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -416,13 +470,14 @@ public class PràcticaUF3_4 {
      * @throws IOException
      */
     public static void AltaClient() throws IOException {
-        File f = new File(NOM_FITXER);
+        File f = new File(NOM_FITXER_DADES);
         if (!f.exists()) {
             f.createNewFile();
         }
         //Demanem cada dada del client i l'afegim a informacio_client
         Clients client_nou = new Clients();
-        client_nou.Codi = CodiNoTrobat();
+        String codi = CodiNoTrobat();
+        client_nou.Codi = Integer.parseInt(codi.trim());
         EscriureClient(client_nou, f);
     }
 
@@ -435,18 +490,18 @@ public class PràcticaUF3_4 {
      */
     public static String CodiNoTrobat() throws IOException {
         //Obrim el fitxer de lectura
-        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_DADES, "r");
         String codi = DemanarCodi();
         //Mirem pel codi que el client no estigui ja en el fitxer. Si ho està, haurem de tornar a demanar el codi
         boolean validat = false;
         while (!validat) {
             boolean codi_trobat = false;
-            String linia = LlegirLinia(raf);
+            String linia = LlegirLiniaDades(raf);
             while (linia != null) {
                 if (linia.contains(codi)) {
                     codi_trobat = true;
                 }
-                linia = LlegirLinia(raf);
+                linia = LlegirLiniaDades(raf);
             }
             if (!codi_trobat) {
                 validat = true;
@@ -466,31 +521,44 @@ public class PràcticaUF3_4 {
      * Procediment per a escriure un nou client
      *
      * @param client_nou nou codi que s'afegeix al fitxer
+     * @param f fitxer sobre el qual es treballa
      * @throws IOException
      */
     public static void EscriureClient(Clients client_nou, File f) throws IOException {
-        //Obrim el fitxer d'escriptura
-        DataOutputStream dos = ObrirFitxerEscriptura(f, true);
-        EscriureIndexClientPosicio(f.length());
-        EscriureIndexClientPosicio(1);
-        Escriure(dos, client_nou.Codi);
+        //Obrim fitxer de lectura i escriptura
+        DataOutputStream dos_fitxer_dades = ObrirFitxerEscriptura(f, true);
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_DADES, "r");
+        
+        String linia = LlegirLiniaDades(raf);
+        if (linia==null){
+            DataOutputStream dos_fitxer_index = EscriureIndexClientPosicio(0);
+            EscriureIndexClientCodi(dos_fitxer_index,client_nou.Codi);
+            EscriureIndexClientMarcaBorrat(dos_fitxer_index,1);
+        }
+        else{
+            DataOutputStream dos_fitxer_index = EscriureIndexClientPosicio(f.length());
+            EscriureIndexClientCodi(dos_fitxer_index,client_nou.Codi);
+            EscriureIndexClientMarcaBorrat(dos_fitxer_index,1);
+        }
+             
+        Escriure(dos_fitxer_dades, Integer.toString(client_nou.Codi));
         client_nou.Nom = DemanarNom();
-        Escriure(dos, client_nou.Nom);
+        Escriure(dos_fitxer_dades, client_nou.Nom);
         client_nou.Cognoms = DemanarCognoms();
-        Escriure(dos, client_nou.Cognoms);
+        Escriure(dos_fitxer_dades, client_nou.Cognoms);
         client_nou.DataNaixement = DemanarDataNaixement();
-        Escriure(dos, client_nou.DataNaixement);
+        Escriure(dos_fitxer_dades, client_nou.DataNaixement);
         client_nou.AdreçaPostal = DemanarAdreçaPostal();
-        Escriure(dos, client_nou.AdreçaPostal);
+        Escriure(dos_fitxer_dades, client_nou.AdreçaPostal);
         client_nou.eMail = DemanarEmail();
-        Escriure(dos, client_nou.eMail);
+        Escriure(dos_fitxer_dades, client_nou.eMail);
         client_nou.VIP = DemanarVIP();
-        Escriure(dos, client_nou.VIP);
+        Escriure(dos_fitxer_dades, client_nou.VIP);
         //Salt de línia
-        Escriure(dos, "\n");
+        Escriure(dos_fitxer_dades, "\n");
 
         //Tanquem el fitxer d'escriptura
-        TancarFitxerEscriptura(dos);
+        TancarFitxerEscriptura(dos_fitxer_dades);
     }
 
     public static int StringaInt(String codi_String) {
@@ -513,18 +581,18 @@ public class PràcticaUF3_4 {
      */
     public static void ConsultaPerPosicio(int posicio) throws IOException {
 
-        long posicio_index = (posicio - 1) * NUMERO_DADES_LINIA;
+        long posicio_index = (posicio - 1) * TAMANY_REGISTRE_INDEX;
         RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_INDEX, "r");
         raf.seek(posicio_index);
-        long posicion_datos = raf.readLong();
+        long posicio_dades = raf.readLong();
         raf.close();
         boolean valid = ComprobarBorrado(posicio_index);
 
         if (valid) {
 
-            RandomAccessFile rafClient = new RandomAccessFile(NOM_FITXER, "r");
-            rafClient.seek(posicion_datos);
-            String linia = LlegirLinia(rafClient);
+            RandomAccessFile rafClient = new RandomAccessFile(NOM_FITXER_DADES, "r");
+            rafClient.seek(posicio_dades);
+            String linia = LlegirLiniaDades(rafClient);
             System.out.println(linia);
             rafClient.close();
         }
@@ -533,12 +601,14 @@ public class PràcticaUF3_4 {
     public static boolean ComprobarBorrado(long posicio_index) {
         boolean resultat = false;
         try {
-            posicio_index += 8;
+            posicio_index = posicio_index+8+4;
             RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_INDEX, "r");
             raf.seek(posicio_index);
-            if (raf.readLong() == 1) {
+            int marca_borrat = raf.readInt();
+            if (marca_borrat == 1) {
                 resultat = true;
             }
+            raf.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PràcticaUF3_4.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -556,41 +626,36 @@ public class PràcticaUF3_4 {
      */
     public static void ConsultaPerCodi(String codi) throws IOException {
         //Obrim el fitxer de lectura
-        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_INDEX, "r");
         //Recorrem les línies del fitxer per imprimir la que conté el codi
-
+        String mirarcodi = LlegirLiniaIndex(raf);
         int count = 0;
-        boolean valid1 = false;
-        while (!valid1) {
-            String mirarcodi = LlegirLinia(raf);
+        boolean valid = false;
+        long posicio_index = 0;
+        while (mirarcodi!=null && !valid) {
+            
             count++;
 
             if (mirarcodi.contains(codi)) {
-                int posicio_index = (count - 1) * NUMERO_DADES_LINIA;
-                valid1 = ComprobarBorrado(posicio_index);
+                posicio_index = (count - 1) * TAMANY_REGISTRE_INDEX;
+                valid = ComprobarBorrado(posicio_index);
             }
+            mirarcodi = LlegirLiniaIndex(raf);
 
         }
-        TancarFitxerLectura(raf);
-        int posicio_index = (count - 1) * NUMERO_DADES_LINIA;
-        boolean valid = ComprobarBorrado(posicio_index);
-        RandomAccessFile raf2 = new RandomAccessFile(NOM_FITXER, "r");
+        
         if (valid) {
-            String linia = LlegirLinia(raf2);
-            int contador = 0;
-            while (linia != null) {
-                contador++;
-
-                if (ComprobarBorrado((contador - 1) * NUMERO_DADES_LINIA)) {
-                    if (linia.contains(codi)) {
-                        System.out.println(linia);
-                    }
-                }
-                linia = LlegirLinia(raf2);
-            }
+            raf.seek(posicio_index);
+            long posicio_dades = raf.readLong();
+            RandomAccessFile rafClient = new RandomAccessFile(NOM_FITXER_DADES, "r");
+            rafClient.seek(posicio_dades);
+            String linia = LlegirLiniaDades(rafClient);
+            System.out.println(linia);
+            rafClient.close();
+            
         }
         //Tanquem el fitxer de lectura
-        TancarFitxerLectura(raf2);
+        TancarFitxerLectura(raf);
     }
 
     /**
@@ -605,14 +670,14 @@ public class PràcticaUF3_4 {
         boolean validat = false;
         while (!validat) {
             //Obrim el fitxer de lectura
-            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
+            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_DADES, "r");
             boolean codi_trobat = false;
-            String linia = LlegirLinia(raf);
+            String linia = LlegirLiniaDades(raf);
             while (linia != null) {
                 if (linia.contains(codi)) {
                     codi_trobat = true;
                 }
-                linia = LlegirLinia(raf);
+                linia = LlegirLiniaDades(raf);
             }
             //Tanquem el fitxer de lectura
             if (codi_trobat) {
@@ -635,14 +700,16 @@ public class PràcticaUF3_4 {
      */
     public static void ModificarClient(String codi) throws IOException {
         //Obrim el fitxer de lectura
-        File f = new File(NOM_FITXER);
+        File f = new File(NOM_FITXER_DADES);
         //Validem el codi perquè si no està en el fitxer no hi ha client per modificar
-        Clients client_nou = new Clients();
-        client_nou.Codi = CodiTrobat(codi);
-
+        codi = CodiTrobat(codi);
         EsborrarClient(codi);
+        System.out.println(""); //Deixem una línia de separació
+        Clients client_nou = new Clients();
+        System.out.println("Insereix les noves dades del client"); 
+        String codi_nou = CodiNoTrobat();
+        client_nou.Codi = Integer.parseInt(codi_nou.trim());
         EscriureClient(client_nou, f);
-        //Tanquem
 
     }
 
@@ -670,18 +737,26 @@ public class PràcticaUF3_4 {
      */
     public static void EsborrarClient(String codi) throws FileNotFoundException, IOException {
         //Creem un nou arxiu per reescriure tot, sense el client esborrat
-        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_DADES, "r");
         RandomAccessFile raf2 = new RandomAccessFile(NOM_FITXER_INDEX, "rw");
-
-        String mirarcodi = LlegirLinia(raf);
-        int count = 1;
-        while (!mirarcodi.contains(codi)) {
-            mirarcodi = LlegirLinia(raf);
+        long posicio_index = 0;
+        String mirarcodi = LlegirLiniaIndex(raf);
+        int count = 0;
+        boolean valid = false;
+        while (mirarcodi!=null && !valid) {
             count++;
+            if (mirarcodi.contains(codi)){
+                posicio_index = (count - 1) * TAMANY_REGISTRE_INDEX;
+                valid = ComprobarBorrado(posicio_index);
+            }
+            mirarcodi = LlegirLiniaDades(raf);
+            
         }
-        int numindex = (count - 1) * 16 + 8;
-        raf2.seek(numindex);
-        raf2.writeLong(0);
+        if (valid){
+            posicio_index = posicio_index+8+4;
+            raf2.seek(posicio_index);
+            raf2.writeLong(0);
+        }        
 
         //Tanqem
         TancarFitxerLectura(raf);
@@ -701,8 +776,8 @@ public class PràcticaUF3_4 {
 
         Utils.BubbleSort(indexos);
         for (int i = 0; i < indexos.length; i++) {
-            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
-            String linia = LlegirLinia(raf);
+            RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_DADES, "r");
+            String linia = LlegirLiniaDades(raf);
 
             while (linia != null) {
                 String numero = "" + indexos[i];
@@ -710,7 +785,7 @@ public class PràcticaUF3_4 {
                 if (linia.contains(numero) && ComprobarBorrado(posicio_index)) {
                     System.out.println(linia);
                 }
-                linia = LlegirLinia(raf);
+                linia = LlegirLiniaDades(raf);
             }
             TancarFitxerLectura(raf);
 
@@ -720,16 +795,16 @@ public class PràcticaUF3_4 {
 
     public static int[] IndexArray() throws FileNotFoundException, IOException {
 
-        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER, "r");
-        String linia = LlegirLinia(raf);
+        RandomAccessFile raf = new RandomAccessFile(NOM_FITXER_DADES, "r");
+        String linia = LlegirLiniaDades(raf);
         int contador = 0;
         while (linia != null) {
-            linia = LlegirLinia(raf);
+            linia = LlegirLiniaDades(raf);
             contador++;
         }
         TancarFitxerLectura(raf);
         int[] resultat = new int[contador];
-        RandomAccessFile raf2 = new RandomAccessFile(NOM_FITXER, "r");
+        RandomAccessFile raf2 = new RandomAccessFile(NOM_FITXER_DADES, "r");
         for (int i = 0; i < resultat.length; i++) {
             resultat[i] = NomesCodi(raf2);
         }
