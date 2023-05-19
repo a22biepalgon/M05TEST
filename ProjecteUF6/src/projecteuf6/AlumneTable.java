@@ -59,6 +59,40 @@ public class AlumneTable extends ORMTable {
 
         return numFilesAfectades;
     }
+    
+    public int Update(ORMEntity o) throws NullConnectionException, SQLException {
+        if (getBDConnection() == null) {
+            throw new NullConnectionException();
+        }
+
+        if (getBDConnection().getConnection() == null) {
+            throw new NullConnectionException();
+        }
+
+        try {
+            if (getBDConnection().getConnection().isClosed()) {
+                throw new NullConnectionException();
+            }
+        } catch (SQLException e) {
+            throw new NullConnectionException();
+        }
+        AlumneEntity p = (AlumneEntity) o;
+        boolean major = false;
+        if (p.getEdat() >= 18){
+            major = true;
+        }
+        String sqlCommand = "UPDATE ALUMNE SET nom = '"
+                + p.getNom()+ "', edat = " + p.getEdat() + ", majorEdat = "+ major+ " WHERE codiAlumne = " + p.getCodiAlumne() + ";";
+
+        Statement st = getBDConnection().getConnection().createStatement();
+        int numFilesAfectades = st.executeUpdate(sqlCommand);
+        st.close();
+
+        //Confirma els canvis
+        getBDConnection().getConnection().commit();
+
+        return numFilesAfectades;
+    }
 
     /**
      * Obté tots els registres de la taula

@@ -15,11 +15,43 @@ import java.util.logging.Logger;
  */
 public class LlistaAlumnes extends javax.swing.JFrame {
 
+    private int posicio = 0;
+
+    // <editor-fold defaultstate="collapsed" desc="DadesConnexio">
+    static final String USER = "a22biepalgon_userm03";
+    static final String PWD = "Apeji13$";
+    static final String URL = "labs.inspedralbes.cat";
+    static final String PORT = "3306";
+    static final String BD_NAME = "a22biepalgon_m03_db";
+    private ArrayList<AlumneEntity> alumnes;
+
+    private void setTot() {
+        AlumneEntity a = this.alumnes.get(this.posicio);
+        jLabel6.setText("" + a.getCodiAlumne());
+        jLabel7.setText(a.getNom());
+        jLabel8.setText("" + a.getEdat());
+        jLabel9.setText("" + a.isMajorEdat());
+    }
+
+    // </editor-fold> 
     /**
      * Creates new form LlistaAlumnes
      */
     public LlistaAlumnes() {
         initComponents();
+        BDConnection bdCon;
+        try {
+            bdCon = new BDConnection(URL, PORT, BD_NAME, USER, PWD);
+            AlumneTable at = new AlumneTable();
+            at.setConnection(bdCon);
+            this.alumnes = at.GetAll();
+
+            setTot();
+
+        } catch (ClassNotFoundException | SQLException | NullConnectionException ex) {
+            Logger.getLogger(LlistaAlumnes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     /**
@@ -32,30 +64,189 @@ public class LlistaAlumnes extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        botoPrimer = new javax.swing.JButton();
+        botoAnterior = new javax.swing.JButton();
+        botoSeguent = new javax.swing.JButton();
+        botoUltim = new javax.swing.JButton();
+        botoEditar = new javax.swing.JButton();
+        botoEliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Llistat Alumnes");
 
+        jLabel2.setText("CODI");
+
+        jLabel3.setText("NOM");
+
+        jLabel4.setText("EDAT");
+
+        jLabel5.setText("MAJORIA EDAT");
+
+        jLabel6.setText("jLabel6");
+
+        jLabel7.setText("jLabel7");
+
+        jLabel8.setText("jLabel8");
+
+        jLabel9.setText("jLabel9");
+
+        botoPrimer.setText("Primer");
+        botoPrimer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoPrimerActionPerformed(evt);
+            }
+        });
+
+        botoAnterior.setText("Anterior");
+        botoAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoAnteriorActionPerformed(evt);
+            }
+        });
+
+        botoSeguent.setText("Següent");
+        botoSeguent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoSeguentActionPerformed(evt);
+            }
+        });
+
+        botoUltim.setText("Últim");
+        botoUltim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoUltimActionPerformed(evt);
+            }
+        });
+
+        botoEditar.setText("Editar");
+        botoEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoEditarActionPerformed(evt);
+            }
+        });
+
+        botoEliminar.setText("Eliminar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(141, 141, 141)
-                .addComponent(jLabel1)
-                .addContainerGap(160, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(124, 124, 124)
+                                        .addComponent(jLabel1))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(botoEditar)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel7)
+                                                .addComponent(jLabel3)
+                                                .addComponent(botoAnterior)))
+                                        .addGap(73, 73, 73))))
+                            .addComponent(jLabel6)
+                            .addComponent(botoPrimer)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(280, 280, 280)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel8)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(280, 280, 280)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(botoEliminar)
+                            .addComponent(botoSeguent))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(botoUltim)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel9))
+                .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel1)
-                .addContainerGap(257, Short.MAX_VALUE))
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botoEditar)
+                    .addComponent(botoEliminar))
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botoPrimer)
+                    .addComponent(botoAnterior)
+                    .addComponent(botoSeguent)
+                    .addComponent(botoUltim))
+                .addGap(28, 28, 28))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botoPrimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoPrimerActionPerformed
+        // TODO add your handling code here:
+        this.posicio = 0;
+        setTot();
+    }//GEN-LAST:event_botoPrimerActionPerformed
+
+    private void botoSeguentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoSeguentActionPerformed
+        // TODO add your handling code here:
+        if (this.posicio + 1 < this.alumnes.size()) {
+            this.posicio++;
+        }
+        setTot();
+    }//GEN-LAST:event_botoSeguentActionPerformed
+
+    private void botoAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoAnteriorActionPerformed
+        // TODO add your handling code here:
+        if (this.posicio - 1 >= 0) {
+            this.posicio--;
+        }
+        setTot();
+    }//GEN-LAST:event_botoAnteriorActionPerformed
+
+    private void botoUltimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoUltimActionPerformed
+        // TODO add your handling code here:
+        this.posicio = this.alumnes.size() - 1;
+        setTot();
+    }//GEN-LAST:event_botoUltimActionPerformed
+
+    private void botoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoEditarActionPerformed
+        // TODO add your handling code here:
+        AlumneEntity a = this.alumnes.get(posicio);
+        EdicioAlumne ed = new EdicioAlumne(a);
+        ed.setVisible(true);
+
+    }//GEN-LAST:event_botoEditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -83,29 +274,32 @@ public class LlistaAlumnes extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(LlistaAlumnes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
-                    AlumneTable at = new AlumneTable();
 
-                try {
-                    ArrayList<AlumneEntity> llistaAlumnes = at.GetAll();
-                    System.out.println("CODI   |   NOM   |  EDAT | MajorEdat ");
-                    for (AlumneEntity a: llistaAlumnes){
-                        System.out.println(a.getCodiAlumne() + "     " + a.getNom() + "     " + a.getEdat() + "     " + a.isMajorEdat());
-                    }
-                } catch (NullConnectionException | SQLException ex) {
-                    Logger.getLogger(LlistaAlumnes.class.getName()).log(Level.SEVERE, null, ex);
-                }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LlistaAlumnes().setVisible(true);
-                
+                System.out.println("a");
 
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botoAnterior;
+    private javax.swing.JButton botoEditar;
+    private javax.swing.JButton botoEliminar;
+    private javax.swing.JButton botoPrimer;
+    private javax.swing.JButton botoSeguent;
+    private javax.swing.JButton botoUltim;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
 }
