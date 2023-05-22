@@ -141,7 +141,6 @@ public class EdicioAlumne extends javax.swing.JFrame {
             ae.setEdat(Integer.parseInt(campText2.getText()));
             System.out.println(at.Update(this.ae));
             bdCon.confirmarCanvis();
-
         } catch (ClassNotFoundException | SQLException | NullConnectionException ex) {
             Logger.getLogger(EdicioAlumne.class.getName()).log(Level.SEVERE, null, ex);
         }

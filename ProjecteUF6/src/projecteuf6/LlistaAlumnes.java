@@ -25,12 +25,21 @@ public class LlistaAlumnes extends javax.swing.JFrame {
     static final String BD_NAME = "a22biepalgon_m03_db";
     private ArrayList<AlumneEntity> alumnes;
 
-    private void setTot() {
-        AlumneEntity a = this.alumnes.get(this.posicio);
-        jLabel6.setText("" + a.getCodiAlumne());
-        jLabel7.setText(a.getNom());
-        jLabel8.setText("" + a.getEdat());
-        jLabel9.setText("" + a.isMajorEdat());
+    public void setTot() {
+        try {
+            BDConnection bdCon;
+            bdCon = new BDConnection(URL, PORT, BD_NAME, USER, PWD);
+            AlumneTable at = new AlumneTable();
+            at.setConnection(bdCon);
+            this.alumnes = at.GetAll();
+            AlumneEntity a = this.alumnes.get(this.posicio);
+            jLabel6.setText("" + a.getCodiAlumne());
+            jLabel7.setText(a.getNom());
+            jLabel8.setText("" + a.getEdat());
+            jLabel9.setText("" + a.isMajorEdat());
+        } catch (ClassNotFoundException | SQLException | NullConnectionException ex) {
+            Logger.getLogger(LlistaAlumnes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // </editor-fold> 
@@ -39,6 +48,7 @@ public class LlistaAlumnes extends javax.swing.JFrame {
      */
     public LlistaAlumnes() {
         initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         BDConnection bdCon;
         try {
             bdCon = new BDConnection(URL, PORT, BD_NAME, USER, PWD);
