@@ -54,8 +54,9 @@ public class AlumneTable extends ORMTable {
             if (p.getEdat() >= 18) {
                 majorEdat = true;
             }
+            
             String sqlCommand = "INSERT INTO ALUMNE (nom, edat, majorEdat) VALUES ("
-                    + "'" + p.getNom() + "', " + p.getEdat() + "," + p.isMajorEdat() + ");";
+                    + "'" + p.getNom().replace("'", "''") + "', " + p.getEdat() + "," + p.isMajorEdat() + ");";
 
             Statement st = getBDConnection().getConnection().createStatement();
             numFilesAfectades = st.executeUpdate(sqlCommand);
@@ -93,7 +94,7 @@ public class AlumneTable extends ORMTable {
                 major = true;
             }
             String sqlCommand = "UPDATE ALUMNE SET nom = '"
-                    + p.getNom() + "', edat = " + p.getEdat() + ", majorEdat = " + major + " WHERE codiAlumne = " + p.getCodiAlumne() + ";";
+                    + p.getNom().replace("'", "''") + "', edat = " + p.getEdat() + ", majorEdat = " + major + " WHERE codiAlumne = " + p.getCodiAlumne() + ";";
 
             Statement st = getBDConnection().getConnection().createStatement();
             numFilesAfectades = st.executeUpdate(sqlCommand);
