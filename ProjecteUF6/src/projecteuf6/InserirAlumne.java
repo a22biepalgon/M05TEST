@@ -19,23 +19,15 @@ import static projecteuf6.LlistaAlumnes.USER;
  *
  * @author ausias
  */
-public class EdicioAlumne extends javax.swing.JFrame {
-
-    private AlumneEntity ae;
-
-    public EdicioAlumne() {
-
-    }
+public class InserirAlumne extends javax.swing.JFrame {
 
     /**
-     * Creates new form EdicioAlumne
+     * Creates new form InserirAlumne
      */
-    public EdicioAlumne(AlumneEntity alumne) {
+    public InserirAlumne() {
         initComponents();
-        ae = alumne;
-        campText1.setText(ae.getNom());
-        campText2.setText("" + ae.getEdat());
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
     }
 
     /**
@@ -49,103 +41,94 @@ public class EdicioAlumne extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        campText1 = new javax.swing.JTextField();
-        campText2 = new javax.swing.JTextField();
-        botoGuardar = new javax.swing.JButton();
-        botoCancelar = new javax.swing.JButton();
+        textNom = new javax.swing.JTextField();
+        textEdat = new javax.swing.JTextField();
+        BotoGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Editar Alumne");
+        setTitle("Inserir un alumne a la taula ALUMNES");
 
-        jLabel1.setText("NOM");
+        jLabel1.setText("Nom");
 
-        jLabel2.setText("EDAT");
+        jLabel2.setText("Edat");
 
-        campText1.addActionListener(new java.awt.event.ActionListener() {
+        textNom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campText1ActionPerformed(evt);
+                textNomActionPerformed(evt);
             }
         });
 
-        campText2.addActionListener(new java.awt.event.ActionListener() {
+        textEdat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campText2ActionPerformed(evt);
+                textEdatActionPerformed(evt);
             }
         });
 
-        botoGuardar.setText("Guardar");
-        botoGuardar.addActionListener(new java.awt.event.ActionListener() {
+        BotoGuardar.setText("Guardar");
+        BotoGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botoGuardarActionPerformed(evt);
+                BotoGuardarActionPerformed(evt);
             }
         });
-
-        botoCancelar.setText("Cancelar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(42, 42, 42)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(botoCancelar)
-                        .addGap(26, 26, 26)
-                        .addComponent(botoGuardar))
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(textNom, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(campText2, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                            .addComponent(campText1))))
-                .addContainerGap(152, Short.MAX_VALUE))
+                            .addComponent(BotoGuardar)
+                            .addComponent(textEdat))))
+                .addContainerGap(179, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(117, 117, 117)
+                .addGap(90, 90, 90)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(campText1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(textNom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(campText2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botoCancelar)
-                    .addComponent(botoGuardar))
-                .addGap(45, 45, 45))
+                    .addComponent(textEdat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(BotoGuardar)
+                .addContainerGap(108, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void campText2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campText2ActionPerformed
+    private void textNomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textNomActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_campText2ActionPerformed
+    }//GEN-LAST:event_textNomActionPerformed
 
-    private void campText1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campText1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campText1ActionPerformed
-
-    private void botoGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoGuardarActionPerformed
+    private void BotoGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotoGuardarActionPerformed
         // TODO add your handling code here:
         BDConnection bdCon;
         try {
-            
+
+            int edat = 0;
+            edat = Integer.parseInt(textEdat.getText());
+
+            AlumneEntity a = new AlumneEntity(0, textNom.getText(), edat);
+
             bdCon = new BDConnection(URL, PORT, BD_NAME, USER, PWD);
             AlumneTable at = new AlumneTable();
             at.setConnection(bdCon);
-            int edat = 0;
-            edat = Integer.parseInt(campText2.getText());
-            ae.setNom(campText1.getText());
-            ae.setEdat(edat);
-            System.out.println(at.Update(this.ae));
+            System.out.println(at.Insert(a));
             bdCon.confirmarCanvis();
+
         } catch (ClassNotFoundException | SQLException | NullConnectionException ex) {
             Logger.getLogger(EdicioAlumne.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NumberFormatException e) {
@@ -153,9 +136,12 @@ public class EdicioAlumne extends javax.swing.JFrame {
             this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        
 
-    }//GEN-LAST:event_botoGuardarActionPerformed
+    }//GEN-LAST:event_BotoGuardarActionPerformed
+
+    private void textEdatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textEdatActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textEdatActionPerformed
 
     /**
      * @param args the command line arguments
@@ -174,30 +160,29 @@ public class EdicioAlumne extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EdicioAlumne.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InserirAlumne.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EdicioAlumne.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InserirAlumne.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EdicioAlumne.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InserirAlumne.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EdicioAlumne.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InserirAlumne.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EdicioAlumne().setVisible(true);
+                new InserirAlumne().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botoCancelar;
-    private javax.swing.JButton botoGuardar;
-    private javax.swing.JTextField campText1;
-    private javax.swing.JTextField campText2;
+    private javax.swing.JButton BotoGuardar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JTextField textEdat;
+    private javax.swing.JTextField textNom;
     // End of variables declaration//GEN-END:variables
 }

@@ -46,9 +46,14 @@ public class AlumneTable extends ORMTable {
         } catch (SQLException e) {
             throw new NullConnectionException();
         }
+        
         AlumneEntity p = (AlumneEntity) o;
-        String sqlCommand = "INSERT INTO Persona "
-                + "VALUES (" + p.getCodiAlumne() + ",'" + p.getNom() + "','" + p.getEdat()+ "'," + p.isMajorEdat() + ")";
+        boolean majorEdat = false;
+            if (p.getEdat() >= 18){
+                majorEdat = true;
+            }
+        String sqlCommand = "INSERT INTO ALUMNE (nom, edat, majorEdat) VALUES ("+
+                "'" + p.getNom() + "', " + p.getEdat() + "," + p.isMajorEdat()+ ");";
 
         Statement st = getBDConnection().getConnection().createStatement();
         int numFilesAfectades = st.executeUpdate(sqlCommand);
@@ -94,6 +99,35 @@ public class AlumneTable extends ORMTable {
         return numFilesAfectades;
     }
 
+     public int Delete(ORMEntity o) throws NullConnectionException, SQLException {
+        if (getBDConnection() == null) {
+            throw new NullConnectionException();
+        }
+
+        if (getBDConnection().getConnection() == null) {
+            throw new NullConnectionException();
+        }
+
+        try {
+            if (getBDConnection().getConnection().isClosed()) {
+                throw new NullConnectionException();
+            }
+        } catch (SQLException e) {
+            throw new NullConnectionException();
+        }
+        AlumneEntity p = (AlumneEntity) o;
+        String sqlCommand = "DELETE FROM ALUMNE WHERE codiAlumne = "
+                 + p.getCodiAlumne() + ";";
+
+        Statement st = getBDConnection().getConnection().createStatement();
+        int numFilesAfectades = st.executeUpdate(sqlCommand);
+        st.close();
+
+        //Confirma els canvis
+        getBDConnection().getConnection().commit();
+
+        return numFilesAfectades;
+    }
     /**
      * Obté tots els registres de la taula
      * @return Retorna una llista amb tots els registres de la taula
