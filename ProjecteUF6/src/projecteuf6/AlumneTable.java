@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -31,6 +32,7 @@ public class AlumneTable extends ORMTable {
      */
     @Override
     public int Insert(ORMEntity o) throws NullConnectionException, SQLException {
+        int numFilesAfectades = 0;
         if (getBDConnection() == null) {
             throw new NullConnectionException();
         }
@@ -46,26 +48,29 @@ public class AlumneTable extends ORMTable {
         } catch (SQLException e) {
             throw new NullConnectionException();
         }
-        
-        AlumneEntity p = (AlumneEntity) o;
-        boolean majorEdat = false;
-            if (p.getEdat() >= 18){
+        try {
+            AlumneEntity p = (AlumneEntity) o;
+            boolean majorEdat = false;
+            if (p.getEdat() >= 18) {
                 majorEdat = true;
             }
-        String sqlCommand = "INSERT INTO ALUMNE (nom, edat, majorEdat) VALUES ("+
-                "'" + p.getNom() + "', " + p.getEdat() + "," + p.isMajorEdat()+ ");";
+            String sqlCommand = "INSERT INTO ALUMNE (nom, edat, majorEdat) VALUES ("
+                    + "'" + p.getNom() + "', " + p.getEdat() + "," + p.isMajorEdat() + ");";
 
-        Statement st = getBDConnection().getConnection().createStatement();
-        int numFilesAfectades = st.executeUpdate(sqlCommand);
-        st.close();
+            Statement st = getBDConnection().getConnection().createStatement();
+            numFilesAfectades = st.executeUpdate(sqlCommand);
+            st.close();
 
-        //Confirma els canvis
-        getBDConnection().getConnection().commit();
-
+            //Confirma els canvis
+            getBDConnection().getConnection().commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Nom Invàlid");
+        }
         return numFilesAfectades;
     }
-    
+
     public int Update(ORMEntity o) throws NullConnectionException, SQLException {
+        int numFilesAfectades = 0;
         if (getBDConnection() == null) {
             throw new NullConnectionException();
         }
@@ -81,25 +86,29 @@ public class AlumneTable extends ORMTable {
         } catch (SQLException e) {
             throw new NullConnectionException();
         }
-        AlumneEntity p = (AlumneEntity) o;
-        boolean major = false;
-        if (p.getEdat() >= 18){
-            major = true;
+        try {
+            AlumneEntity p = (AlumneEntity) o;
+            boolean major = false;
+            if (p.getEdat() >= 18) {
+                major = true;
+            }
+            String sqlCommand = "UPDATE ALUMNE SET nom = '"
+                    + p.getNom() + "', edat = " + p.getEdat() + ", majorEdat = " + major + " WHERE codiAlumne = " + p.getCodiAlumne() + ";";
+
+            Statement st = getBDConnection().getConnection().createStatement();
+            numFilesAfectades = st.executeUpdate(sqlCommand);
+            st.close();
+
+            //Confirma els canvis
+            getBDConnection().getConnection().commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Nom Invàlid");
+
         }
-        String sqlCommand = "UPDATE ALUMNE SET nom = '"
-                + p.getNom()+ "', edat = " + p.getEdat() + ", majorEdat = "+ major+ " WHERE codiAlumne = " + p.getCodiAlumne() + ";";
-
-        Statement st = getBDConnection().getConnection().createStatement();
-        int numFilesAfectades = st.executeUpdate(sqlCommand);
-        st.close();
-
-        //Confirma els canvis
-        getBDConnection().getConnection().commit();
-
         return numFilesAfectades;
     }
 
-     public int Delete(ORMEntity o) throws NullConnectionException, SQLException {
+    public int Delete(ORMEntity o) throws NullConnectionException, SQLException {
         if (getBDConnection() == null) {
             throw new NullConnectionException();
         }
@@ -117,7 +126,7 @@ public class AlumneTable extends ORMTable {
         }
         AlumneEntity p = (AlumneEntity) o;
         String sqlCommand = "DELETE FROM ALUMNE WHERE codiAlumne = "
-                 + p.getCodiAlumne() + ";";
+                + p.getCodiAlumne() + ";";
 
         Statement st = getBDConnection().getConnection().createStatement();
         int numFilesAfectades = st.executeUpdate(sqlCommand);
@@ -128,11 +137,13 @@ public class AlumneTable extends ORMTable {
 
         return numFilesAfectades;
     }
+
     /**
      * Obté tots els registres de la taula
+     *
      * @return Retorna una llista amb tots els registres de la taula
      * @throws NullConnectionException
-     * @throws SQLException 
+     * @throws SQLException
      */
     @Override
     public ArrayList<AlumneEntity> GetAll() throws NullConnectionException, SQLException {
@@ -144,10 +155,10 @@ public class AlumneTable extends ORMTable {
 
         while (resultat.next()) {
             AlumneEntity p = new AlumneEntity(
-                    resultat.getInt("codiAlumne"), 
-                    resultat.getString("Nom"), 
+                    resultat.getInt("codiAlumne"),
+                    resultat.getString("Nom"),
                     resultat.getInt("Edat"));
-         
+
             resultList.add(p);
         }
 

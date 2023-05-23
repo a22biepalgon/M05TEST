@@ -81,6 +81,11 @@ public class EdicioAlumne extends javax.swing.JFrame {
         });
 
         botoCancelar.setText("Cancelar");
+        botoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -136,7 +141,7 @@ public class EdicioAlumne extends javax.swing.JFrame {
         // TODO add your handling code here:
         BDConnection bdCon;
         try {
-            
+
             bdCon = new BDConnection(URL, PORT, BD_NAME, USER, PWD);
             AlumneTable at = new AlumneTable();
             at.setConnection(bdCon);
@@ -149,13 +154,18 @@ public class EdicioAlumne extends javax.swing.JFrame {
         } catch (ClassNotFoundException | SQLException | NullConnectionException ex) {
             Logger.getLogger(EdicioAlumne.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(this, "Edat Invalida :/");
+            JOptionPane.showMessageDialog(this, "Edat Invalida :/");
             this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        
+
 
     }//GEN-LAST:event_botoGuardarActionPerformed
+
+    private void botoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoCancelarActionPerformed
+        // TODO add your handling code here:
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }//GEN-LAST:event_botoCancelarActionPerformed
 
     /**
      * @param args the command line arguments
